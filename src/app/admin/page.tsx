@@ -20,16 +20,18 @@ export default async function AdminPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="text-2xl font-semibold text-neutral-900">
+      <h1 className="text-2xl font-semibold text-warm-900">
         Approval queue
       </h1>
-      <p className="mt-1 text-sm text-neutral-600">
+      <p className="mt-1 text-sm text-warm-600">
         Every new parent and sitter waits here until you approve them.
         Nothing in the app lets an unapproved account book or message.
       </p>
 
       <div className="mt-6">
-        <ApprovalQueue initialUsers={users} />
+        <ApprovalQueue
+          initialUsers={users.map((u) => ({ ...u, name: u.name ?? u.email }))}
+        />
       </div>
     </div>
   );

@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatCurrency } from "@/lib/mock-data";
 import { getSitterById } from "@/lib/sitters";
 import { ApprovalBadge } from "@/components/approval-badge";
+import { Avatar } from "@/components/avatar";
 import { BookingForm } from "@/components/booking-form";
 
 export default async function SitterProfilePage({
@@ -15,22 +17,36 @@ export default async function SitterProfilePage({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
+      <nav className="mb-4 text-xs text-warm-500">
+        <Link href="/" className="hover:text-warm-900">
+          Home
+        </Link>
+        <span className="mx-1.5">/</span>
+        <Link href="/sitters" className="hover:text-warm-900">
+          Find a sitter
+        </Link>
+        <span className="mx-1.5">/</span>
+        <span className="text-warm-700">{sitter.name}</span>
+      </nav>
       <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-neutral-900">
-            {sitter.name}
-          </h1>
-          <p className="text-sm text-neutral-500">
-            {sitter.suburb ? `${sitter.suburb} · ` : ""}
-            {sitter.yearsExperience} yrs experience ·{" "}
-            {formatCurrency(sitter.hourlyRateCents)}/hr
-          </p>
+        <div className="flex items-center gap-4">
+          <Avatar name={sitter.name} className="h-14 w-14 text-lg" />
+          <div>
+            <h1 className="text-2xl font-semibold text-warm-900">
+              {sitter.name}
+            </h1>
+            <p className="text-sm text-warm-500">
+              {sitter.suburb ? `${sitter.suburb} · ` : ""}
+              {sitter.yearsExperience} yrs experience ·{" "}
+              {formatCurrency(sitter.hourlyRateCents)}/hr
+            </p>
+          </div>
         </div>
         <ApprovalBadge status={sitter.approvalStatus} />
       </div>
 
       {(sitter.backgroundCheckAt || sitter.idVerifiedAt) && (
-        <div className="mt-3 flex gap-4 text-xs text-neutral-500">
+        <div className="mt-3 flex gap-4 text-xs text-warm-500">
           {sitter.backgroundCheckAt && (
             <span>
               ✓ Background check on file{" "}
@@ -46,10 +62,10 @@ export default async function SitterProfilePage({
         </div>
       )}
 
-      <p className="mt-6 text-neutral-700">{sitter.bio}</p>
+      <p className="mt-6 text-warm-700">{sitter.bio}</p>
 
-      <div className="mt-8 rounded-lg border border-neutral-200 bg-white p-5">
-        <h2 className="text-lg font-medium text-neutral-900">
+      <div className="mt-8 rounded-lg border border-warm-200 bg-white p-5">
+        <h2 className="text-lg font-medium text-warm-900">
           Request a booking
         </h2>
         {sitter.approvalStatus !== "APPROVED" ? (
@@ -59,10 +75,10 @@ export default async function SitterProfilePage({
           </p>
         ) : (
           <>
-            <p className="mt-1 text-xs text-neutral-500">
+            <p className="mt-1 text-xs text-warm-500">
               You&apos;ll need an Ella-approved account to send a request —
               new here?{" "}
-              <a href="/join" className="text-violet-700 underline">
+              <a href="/join" className="text-primary-700 underline">
                 Request access
               </a>
               .

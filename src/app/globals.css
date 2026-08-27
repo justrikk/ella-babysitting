@@ -1,28 +1,47 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas,
     monospace;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+  /* Brand — rich plum/indigo. Deeper and warmer than stock Tailwind
+     violet-600, meant to read as trustworthy rather than "generic SaaS
+     purple". Used for primary actions, links, and active nav state. */
+  --color-primary-50: #f6f3fb;
+  --color-primary-100: #ebe4f5;
+  --color-primary-200: #d5c5ea;
+  --color-primary-300: #b89adc;
+  --color-primary-400: #9a6fcc;
+  --color-primary-500: #7c4fb8;
+  --color-primary-600: #63389b;
+  --color-primary-700: #4f2c7c;
+  --color-primary-800: #3d2260;
+  --color-primary-900: #2c1946;
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Accent — warm coral, used sparingly for highlights (ratings, secondary
+     emphasis) to keep the palette from reading as one flat purple wash. */
+  --color-accent-50: #fff3ed;
+  --color-accent-100: #ffe2d1;
+  --color-accent-200: #ffc3a3;
+  --color-accent-300: #ff9d6e;
+  --color-accent-400: #fb7a45;
+  --color-accent-500: #f0592a;
+  --color-accent-600: #d0431a;
+  --color-accent-700: #a83415;
+
+  /* Warm neutral — replaces Tailwind's cold `neutral` gray scale for
+     backgrounds/borders/body text, so the app reads as inviting rather
+     than sterile. Same lightness steps as `neutral` for drop-in contrast. */
+  --color-warm-50: #faf8f5;
+  --color-warm-100: #f3efe9;
+  --color-warm-200: #e8e1d8;
+  --color-warm-300: #d6ccbe;
+  --color-warm-400: #b3a695;
+  --color-warm-500: #8f8071;
+  --color-warm-600: #6e6255;
+  --color-warm-700: #554b40;
+  --color-warm-800: #3d362e;
+  --color-warm-900: #292420;
 }

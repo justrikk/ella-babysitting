@@ -9,10 +9,10 @@ export default async function JoinPage({
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
-      <h1 className="text-2xl font-semibold text-neutral-900">
+      <h1 className="text-2xl font-semibold text-warm-900">
         Request access
       </h1>
-      <p className="mt-2 text-sm text-neutral-600">
+      <p className="mt-2 text-sm text-warm-600">
         This app is kept local to people Ella knows in Bundeena &amp;
         Maianbar. Anyone can browse sitters, but you&apos;ll need Ella to
         approve your account before you can send a booking request or
@@ -42,56 +42,56 @@ export default async function JoinPage({
 
       <form action={requestParentAccess} className="mt-6 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-neutral-700">
+          <label className="block text-sm font-medium text-warm-700">
             Full name
           </label>
           <input
             type="text"
             name="name"
             required
-            className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-md border border-warm-300 px-3 py-2 text-sm"
             placeholder="Jane Smith"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-neutral-700">
+          <label className="block text-sm font-medium text-warm-700">
             Email
           </label>
           <input
             type="email"
             name="email"
             required
-            className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-md border border-warm-300 px-3 py-2 text-sm"
             placeholder="jane@example.com"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-neutral-700">
+          <label className="block text-sm font-medium text-warm-700">
             Suburb
           </label>
           <select
             name="suburb"
-            className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-md border border-warm-300 px-3 py-2 text-sm"
           >
             <option>Bundeena</option>
             <option>Maianbar</option>
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-neutral-700">
+          <label className="block text-sm font-medium text-warm-700">
             How does Ella know you?
           </label>
           <input
             type="text"
             name="note"
-            className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-md border border-warm-300 px-3 py-2 text-sm"
             placeholder="e.g. neighbour, school parent, referred by Sam K."
           />
         </div>
 
         <button
           type="submit"
-          className="w-full rounded-md bg-violet-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-violet-700"
+          className="w-full rounded-full bg-primary-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-700"
         >
           Request access
         </button>

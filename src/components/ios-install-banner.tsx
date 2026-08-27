@@ -31,7 +31,7 @@ export function IosInstallBanner() {
   if (!show) return null;
 
   return (
-    <div className="bg-violet-600 px-4 py-2 text-center text-sm text-white">
+    <div className="bg-primary-600 px-4 py-2 text-center text-sm text-white">
       Add this app to your Home Screen to get booking &amp; message
       notifications: tap the Share icon, then &quot;Add to Home Screen&quot;.
     </div>

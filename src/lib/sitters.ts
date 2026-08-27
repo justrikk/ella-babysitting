@@ -11,7 +11,7 @@ function toSitterProfile(
   return {
     id: p.id,
     userId: p.userId,
-    name: p.user.name,
+    name: p.user.name ?? p.user.email,
     suburb: p.user.suburb ?? undefined,
     bio: p.bio ?? "",
     hourlyRateCents: p.hourlyRateCents,

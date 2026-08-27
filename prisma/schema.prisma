@@ -53,7 +53,7 @@ model User {
   email          String         @unique
   emailVerified  DateTime?      // set by Auth.js on magic-link verification
   image          String?        // Auth.js adapter expects this field to exist
-  name           String
+  name           String?        // null for accounts created by magic-link sign-in with no prior /join or /sitters/apply form (e.g. ADMIN_EMAILS auto-promotion)
   phone          String?
   suburb         String?        // "Bundeena" | "Maianbar" — informal, not enforced
   role           Role           @default(PARENT)

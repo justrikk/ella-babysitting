@@ -35,7 +35,7 @@ export function BookingForm({ sitter }: { sitter: SitterProfile }) {
     <form onSubmit={handleSubmit} className="mt-4 space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-neutral-700">
+          <label className="block text-sm font-medium text-warm-700">
             Date
           </label>
           <input
@@ -43,11 +43,11 @@ export function BookingForm({ sitter }: { sitter: SitterProfile }) {
             required
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-md border border-warm-300 px-3 py-2 text-sm"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-neutral-700">
+          <label className="block text-sm font-medium text-warm-700">
             Start time
           </label>
           <input
@@ -55,13 +55,13 @@ export function BookingForm({ sitter }: { sitter: SitterProfile }) {
             required
             value={startTime}
             onChange={(e) => setStartTime(e.target.value)}
-            className="mt-1 w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-md border border-warm-300 px-3 py-2 text-sm"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-neutral-700">
+        <label className="block text-sm font-medium text-warm-700">
           Duration (hours)
         </label>
         <input
@@ -70,20 +70,20 @@ export function BookingForm({ sitter }: { sitter: SitterProfile }) {
           max={12}
           value={hours}
           onChange={(e) => setHours(Number(e.target.value))}
-          className="mt-1 w-32 rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className="mt-1 w-32 rounded-md border border-warm-300 px-3 py-2 text-sm"
         />
       </div>
 
-      <div className="flex items-center justify-between rounded-md bg-neutral-50 px-3 py-2 text-sm">
-        <span className="text-neutral-600">Estimated total</span>
-        <span className="font-medium text-neutral-900">
+      <div className="flex items-center justify-between rounded-md bg-warm-50 px-3 py-2 text-sm">
+        <span className="text-warm-600">Estimated total</span>
+        <span className="font-medium text-warm-900">
           {formatCurrency(estimateCents)}
         </span>
       </div>
 
       <button
         type="submit"
-        className="w-full rounded-md bg-violet-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-violet-700"
+        className="w-full rounded-full bg-primary-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-700"
       >
         Send booking request
       </button>

@@ -43,7 +43,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         adminEmails.includes(user.email.toLowerCase()) &&
         (user.role !== "ADMIN" || user.approvalStatus !== "APPROVED")
       ) {
-        await prisma.user.update({
+        // updateMany, not update: on the first signIn callback invocation
+        // (when the magic link is requested), Auth.js passes a user object
+        // that hasn't been persisted to the DB yet for brand-new emails —
+        // update() would throw "record not found" and block the email from
+        // ever being sent. updateMany() no-ops instead; the real promotion
+        // happens on the second invocation, once the link is clicked and
+        // the user row actually exists.
+        await prisma.user.updateMany({
           where: { id: user.id },
           data: {
             role: "ADMIN",

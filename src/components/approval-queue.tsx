@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { ApprovalStatus, Role } from "@prisma/client";
 import { decideApproval } from "@/lib/actions";
+import { Avatar } from "@/components/avatar";
 
 type QueueUser = {
   id: string;
@@ -35,12 +36,12 @@ export function ApprovalQueue({ initialUsers }: { initialUsers: QueueUser[] }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-sm font-medium text-neutral-900">
+        <h2 className="text-sm font-medium text-warm-900">
           Pending ({pending.length})
         </h2>
         <div className="mt-2 space-y-2">
           {pending.length === 0 && (
-            <p className="text-sm text-neutral-400">
+            <p className="text-sm text-warm-400">
               Nothing waiting on you right now.
             </p>
           )}
@@ -49,38 +50,41 @@ export function ApprovalQueue({ initialUsers }: { initialUsers: QueueUser[] }) {
             return (
               <div
                 key={u.id}
-                className="rounded-lg border border-neutral-200 bg-white p-4"
+                className="rounded-xl border border-warm-200 bg-white p-4"
               >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-medium text-neutral-900">
-                      {u.name}{" "}
-                      <span className="ml-1 rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600">
-                        {u.role === "SITTER" ? "Sitter" : "Parent"}
-                      </span>
-                    </p>
-                    <p className="text-sm text-neutral-500">
-                      {u.email}
-                      {u.suburb ? ` · ${u.suburb}` : ""}
-                    </p>
-                    {u.referralNote && (
-                      <p className="mt-1 text-sm text-neutral-600">
-                        {u.referralNote}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <Avatar name={u.name} />
+                    <div>
+                      <p className="font-medium text-warm-900">
+                        {u.name}{" "}
+                        <span className="ml-1 rounded-full bg-warm-100 px-2 py-0.5 text-xs text-warm-600">
+                          {u.role === "SITTER" ? "Sitter" : "Parent"}
+                        </span>
                       </p>
-                    )}
+                      <p className="text-sm text-warm-500">
+                        {u.email}
+                        {u.suburb ? ` · ${u.suburb}` : ""}
+                      </p>
+                      {u.referralNote && (
+                        <p className="mt-1 text-sm text-warm-600">
+                          {u.referralNote}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex shrink-0 gap-2">
                     <button
                       onClick={() => decide(u.id, "APPROVED")}
                       disabled={busy}
-                      className="rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 disabled:opacity-50"
+                      className="rounded-full bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 disabled:opacity-50"
                     >
                       Approve
                     </button>
                     <button
                       onClick={() => decide(u.id, "REJECTED")}
                       disabled={busy}
-                      className="rounded-md border border-neutral-300 px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-neutral-50 disabled:opacity-50"
+                      className="rounded-full border border-warm-300 px-3 py-1.5 text-xs font-medium text-warm-700 hover:bg-warm-50 disabled:opacity-50"
                     >
                       Reject
                     </button>
@@ -94,18 +98,21 @@ export function ApprovalQueue({ initialUsers }: { initialUsers: QueueUser[] }) {
 
       {decided.length > 0 && (
         <div>
-          <h2 className="text-sm font-medium text-neutral-900">
+          <h2 className="text-sm font-medium text-warm-900">
             Recently decided
           </h2>
           <div className="mt-2 space-y-2">
             {decided.map((u) => (
               <div
                 key={u.id}
-                className="flex items-center justify-between rounded-lg border border-neutral-200 bg-neutral-50 p-3 text-sm"
+                className="flex items-center justify-between rounded-xl border border-warm-200 bg-warm-50 p-3 text-sm"
               >
-                <span className="text-neutral-700">
-                  {u.name} · {u.role === "SITTER" ? "Sitter" : "Parent"}
-                </span>
+                <div className="flex items-center gap-2.5">
+                  <Avatar name={u.name} className="h-7 w-7 text-[11px]" />
+                  <span className="text-warm-700">
+                    {u.name} · {u.role === "SITTER" ? "Sitter" : "Parent"}
+                  </span>
+                </div>
                 <span
                   className={
                     u.approvalStatus === "APPROVED"
