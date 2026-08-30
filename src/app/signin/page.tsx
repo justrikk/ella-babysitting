@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { signIn } from "@/auth";
 
 export default function SignInPage() {
@@ -6,8 +7,15 @@ export default function SignInPage() {
       <h1 className="text-2xl font-semibold text-warm-900">Sign in</h1>
       <p className="mt-2 text-sm text-warm-600">
         Enter your email and we&apos;ll send you a magic link — no password
-        needed. Use the same email you applied with on /join or
-        /sitters/apply.
+        needed. Use the same email you applied with on{" "}
+        <Link href="/join" className="text-primary-700 underline">
+          Request access
+        </Link>{" "}
+        or{" "}
+        <Link href="/sitters/apply" className="text-primary-700 underline">
+          Become a sitter
+        </Link>
+        .
       </p>
 
       <form

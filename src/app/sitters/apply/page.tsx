@@ -129,10 +129,8 @@ export default async function SitterApplyPage({
         </div>
 
         <div className="rounded-md bg-amber-50 border border-amber-200 p-3 text-xs text-amber-800">
-          This creates your profile as PENDING — it won&apos;t be bookable or
-          visible with rates until Ella approves it in /admin. Stripe Connect
-          payout onboarding still needs to be wired up separately (see
-          README).
+          Your profile won&apos;t be bookable or show your rate publicly
+          until Ella approves it.
         </div>
 
         <button
