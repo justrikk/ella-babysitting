@@ -85,3 +85,19 @@ export function IconWaves({ className }: IconProps) {
     </svg>
   );
 }
+
+export function IconHeart({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M12 20.5s-7-4.35-9.5-8.8C.9 8.4 2.3 5 5.6 4.3c2-.4 3.7.6 4.9 2.2 1.2-1.6 2.9-2.6 4.9-2.2C18.7 5 20.1 8.4 18.5 11.7 16 16.15 12 20.5 12 20.5z" />
+    </svg>
+  );
+}
+
+export function IconHeartFilled({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" className={className}>
+      <path d="M12 20.5s-7-4.35-9.5-8.8C.9 8.4 2.3 5 5.6 4.3c2-.4 3.7.6 4.9 2.2 1.2-1.6 2.9-2.6 4.9-2.2C18.7 5 20.1 8.4 18.5 11.7 16 16.15 12 20.5 12 20.5z" />
+    </svg>
+  );
+}
