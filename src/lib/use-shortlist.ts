@@ -38,11 +38,15 @@ function writeShortlist(ids: string[]) {
 
 export function useShortlist() {
   // Starts empty (SSR-safe — never read localStorage during render) and
-  // syncs to the real value on mount.
+  // syncs to the real value on mount. `hydrated` lets callers (e.g. the
+  // /shortlist compare page) tell "genuinely empty" apart from "haven't
+  // read localStorage yet" instead of flashing an empty state on mount.
   const [ids, setIds] = useState<string[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     setIds(readShortlist());
+    setHydrated(true);
 
     const resync = () => setIds(readShortlist());
     window.addEventListener(CHANGE_EVENT, resync);
@@ -64,5 +68,5 @@ export function useShortlist() {
 
   const isShortlisted = useCallback((id: string) => ids.includes(id), [ids]);
 
-  return { ids, isShortlisted, toggle };
+  return { ids, hydrated, isShortlisted, toggle };
 }

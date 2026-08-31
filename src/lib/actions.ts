@@ -13,6 +13,7 @@ import { getSupabaseServiceClient, SITTER_AVATARS_BUCKET } from "@/lib/supabase"
 import { payBookingFee } from "@/lib/payments";
 import { hashPassword } from "@/lib/password";
 import { verifyTurnstileToken } from "@/lib/turnstile";
+import { getSittersByIds } from "@/lib/sitters";
 
 const BOOKING_FEE_CENTS = 495;
 
@@ -742,4 +743,12 @@ export async function payBookingFeeAction(formData: FormData) {
 
   revalidatePath(`/bookings/${bookingId}`);
   redirect(`/bookings/${bookingId}`);
+}
+
+// --- Shortlist compare (src/app/shortlist) ---
+// Shortlist ids live client-side (localStorage, src/lib/use-shortlist.ts) —
+// this action is called directly from that client page (not a <form>) to
+// hydrate full sitter data for the saved ids.
+export async function getShortlistedSitters(ids: string[]) {
+  return getSittersByIds(ids);
 }

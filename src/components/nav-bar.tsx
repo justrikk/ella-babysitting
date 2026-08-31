@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { auth, signOut } from "@/auth";
 import { MobileMenu } from "@/components/mobile-menu";
+import { ShortlistNavLink } from "@/components/shortlist-nav-link";
 
 export async function NavBar() {
   const session = await auth();
@@ -15,6 +16,7 @@ export async function NavBar() {
       <Link href="/sitters" className={linkCls}>
         Find a sitter
       </Link>
+      <ShortlistNavLink className={`${linkCls} inline-flex items-center`} />
       {session && (
         <Link href="/dashboard" className={linkCls}>
           Dashboard
