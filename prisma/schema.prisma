@@ -143,6 +143,15 @@ model SitterProfile {
   hourlyRateCents    Int?
   yearsExperience    Int?
 
+  // "Best with" age range — the ages this sitter is most comfortable
+  // caring for, distinct from yearsExperience above. Both null until set
+  // in the self-service profile editor. Powers the /sitters age filter.
+  bestWithAgeMin     Int?
+  bestWithAgeMax     Int?
+  // Self-declared service tags, filterable on /sitters.
+  offersSchoolPickup Boolean  @default(false)
+  offersEveningCare  Boolean  @default(false)
+
   // Safety/identity info, collected at signup (src/lib/actions.ts).
   dateOfBirth             DateTime?
   emergencyContact1Name   String?

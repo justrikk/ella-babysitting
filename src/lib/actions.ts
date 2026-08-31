@@ -388,15 +388,40 @@ async function requireOwnSitterProfile() {
 const ALLOWED_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 
-const updateSitterProfileSchema = z.object({
-  bio: z.string().trim().min(1),
-  hourlyRate: z.coerce.number().positive(),
-  wwccConfirmed: z.literal("on").optional(),
-  wwccNumber: z.string().trim().optional(),
-  wwccExpiry: z.coerce.date().optional().or(z.literal("").transform(() => undefined)),
-  firstAidCertified: z.literal("on").optional(),
-  otherCertifications: z.string().trim().optional(),
-});
+const updateSitterProfileSchema = z
+  .object({
+    bio: z.string().trim().min(1),
+    hourlyRate: z.coerce.number().positive(),
+    wwccConfirmed: z.literal("on").optional(),
+    wwccNumber: z.string().trim().optional(),
+    wwccExpiry: z.coerce.date().optional().or(z.literal("").transform(() => undefined)),
+    firstAidCertified: z.literal("on").optional(),
+    otherCertifications: z.string().trim().optional(),
+    bestWithAgeMin: z.coerce
+      .number()
+      .int()
+      .min(0)
+      .optional()
+      .or(z.literal("").transform(() => undefined)),
+    bestWithAgeMax: z.coerce
+      .number()
+      .int()
+      .min(0)
+      .optional()
+      .or(z.literal("").transform(() => undefined)),
+    offersSchoolPickup: z.literal("on").optional(),
+    offersEveningCare: z.literal("on").optional(),
+  })
+  .refine(
+    (data) =>
+      data.bestWithAgeMin === undefined ||
+      data.bestWithAgeMax === undefined ||
+      data.bestWithAgeMin <= data.bestWithAgeMax,
+    {
+      message: "Age range minimum must be less than or equal to the maximum.",
+      path: ["bestWithAgeMax"],
+    }
+  );
 
 export async function updateSitterProfile(formData: FormData) {
   const { session, profile } = await requireOwnSitterProfile();
@@ -409,6 +434,10 @@ export async function updateSitterProfile(formData: FormData) {
     wwccExpiry: formData.get("wwccExpiry") || undefined,
     firstAidCertified: formData.get("firstAidCertified") || undefined,
     otherCertifications: formData.get("otherCertifications") || undefined,
+    bestWithAgeMin: formData.get("bestWithAgeMin") || undefined,
+    bestWithAgeMax: formData.get("bestWithAgeMax") || undefined,
+    offersSchoolPickup: formData.get("offersSchoolPickup") || undefined,
+    offersEveningCare: formData.get("offersEveningCare") || undefined,
   });
   if (!parsed.success) redirect("/dashboard/profile?error=invalid");
   const {
@@ -419,6 +448,10 @@ export async function updateSitterProfile(formData: FormData) {
     wwccExpiry,
     firstAidCertified,
     otherCertifications,
+    bestWithAgeMin,
+    bestWithAgeMax,
+    offersSchoolPickup,
+    offersEveningCare,
   } = parsed.data;
 
   let imageUrl: string | undefined;
@@ -451,6 +484,10 @@ export async function updateSitterProfile(formData: FormData) {
         wwccExpiry: wwccExpiry ?? null,
         firstAidCertified: firstAidCertified === "on",
         otherCertifications: otherCertifications || null,
+        bestWithAgeMin: bestWithAgeMin ?? null,
+        bestWithAgeMax: bestWithAgeMax ?? null,
+        offersSchoolPickup: offersSchoolPickup === "on",
+        offersEveningCare: offersEveningCare === "on",
       },
     }),
     ...(imageUrl

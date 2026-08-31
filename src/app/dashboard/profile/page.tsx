@@ -31,7 +31,8 @@ function toDateInputValue(d: Date | null) {
 }
 
 const ERROR_MESSAGES: Record<string, string> = {
-  invalid: "Please fill in a bio and a valid hourly rate.",
+  invalid:
+    "Please fill in a bio and a valid hourly rate — and check your age range (min must be less than or equal to max).",
   phototype: "Photo must be a JPEG, PNG, or WebP image.",
   photosize: "Photo must be 5MB or smaller.",
   upload: "Photo upload failed — please try again.",
@@ -219,6 +220,62 @@ export default async function SitterProfileEditorPage({
               className="mt-1 w-full rounded-md border border-warm-300 px-3 py-2 text-sm"
               placeholder="Certificate name and expiry date, e.g. CPR — HLTAID009, exp. 06/2027"
             />
+          </div>
+        </div>
+
+        <div className="rounded-md border border-warm-200 p-3">
+          <p className="text-sm font-medium text-warm-800">
+            Best with — age range (optional)
+          </p>
+          <p className="mt-1 text-xs text-warm-500">
+            Shown on your listing and used in the age filter on the sitter
+            directory.
+          </p>
+          <div className="mt-2 grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-warm-700">
+                Min age
+              </label>
+              <input
+                type="number"
+                name="bestWithAgeMin"
+                min={0}
+                defaultValue={profile.bestWithAgeMin ?? ""}
+                className="mt-1 w-full rounded-md border border-warm-300 px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-warm-700">
+                Max age
+              </label>
+              <input
+                type="number"
+                name="bestWithAgeMax"
+                min={0}
+                defaultValue={profile.bestWithAgeMax ?? ""}
+                className="mt-1 w-full rounded-md border border-warm-300 px-3 py-2 text-sm"
+              />
+            </div>
+          </div>
+          <div className="mt-3 space-y-2">
+            <label className="flex items-start gap-2 text-sm text-warm-700">
+              <input
+                type="checkbox"
+                name="offersSchoolPickup"
+                defaultChecked={profile.offersSchoolPickup}
+                className="mt-1"
+              />
+              <span>I&apos;m available for school pickup.</span>
+            </label>
+            <label className="flex items-start gap-2 text-sm text-warm-700">
+              <input
+                type="checkbox"
+                name="offersEveningCare"
+                defaultChecked={profile.offersEveningCare}
+                className="mt-1"
+              />
+              <span>I&apos;m available for evening care.</span>
+            </label>
           </div>
         </div>
 

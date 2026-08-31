@@ -16,6 +16,12 @@ export type BookingStatus =
   | "CANCELLED"
   | "COMPLETED";
 
+export interface SitterAvailabilitySlot {
+  dayOfWeek: number; // 0=Sun .. 6=Sat
+  startMinute: number;
+  endMinute: number;
+}
+
 export interface SitterProfile {
   id: string;
   userId: string;
@@ -30,6 +36,13 @@ export interface SitterProfile {
   idVerifiedAt?: string; // optional, not required for this app
   avgRating: number;
   reviewCount: number;
+  wwccConfirmed: boolean;
+  firstAidCertified: boolean;
+  bestWithAgeMin?: number;
+  bestWithAgeMax?: number;
+  offersSchoolPickup: boolean;
+  offersEveningCare: boolean;
+  availability: SitterAvailabilitySlot[];
 }
 
 export interface Booking {

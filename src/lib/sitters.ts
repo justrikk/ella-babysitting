@@ -2,11 +2,13 @@ import { prisma } from "@/lib/prisma";
 import type { SitterProfile } from "@/lib/types";
 import type {
   SitterProfile as PrismaSitterProfile,
+  SitterAvailability,
   User,
+  Prisma,
 } from "@prisma/client";
 
-function toSitterProfile(
-  p: PrismaSitterProfile & { user: User }
+export function toSitterProfile(
+  p: PrismaSitterProfile & { user: User; availability: SitterAvailability[] }
 ): SitterProfile {
   return {
     id: p.id,
@@ -22,6 +24,17 @@ function toSitterProfile(
     idVerifiedAt: p.idVerifiedAt?.toISOString(),
     avgRating: p.avgRating ?? 0,
     reviewCount: p.reviewCount,
+    wwccConfirmed: p.wwccConfirmed,
+    firstAidCertified: p.firstAidCertified,
+    bestWithAgeMin: p.bestWithAgeMin ?? undefined,
+    bestWithAgeMax: p.bestWithAgeMax ?? undefined,
+    offersSchoolPickup: p.offersSchoolPickup,
+    offersEveningCare: p.offersEveningCare,
+    availability: p.availability.map((a) => ({
+      dayOfWeek: a.dayOfWeek,
+      startMinute: a.startMinute,
+      endMinute: a.endMinute,
+    })),
   };
 }
 
@@ -31,11 +44,31 @@ function toSitterProfile(
 // availability, not existing bookings (no double-booking detection).
 const SEARCH_WINDOW_MINUTES = 60;
 
+const WEEKEND_DAYS = [0, 6]; // Sun, Sat
+
+export type AgeBand = "infants" | "toddlers" | "primary" | "teens";
+
+// Fixed age bands for the /sitters age filter — no numeric range picker UI
+// exists in this app, so bands keep the filter a simple pill like suburb/sort.
+export const AGE_BANDS: Record<AgeBand, { label: string; min: number; max: number }> = {
+  infants: { label: "Infants 0–2", min: 0, max: 2 },
+  toddlers: { label: "Toddlers 2–5", min: 2, max: 5 },
+  primary: { label: "Primary 5–12", min: 5, max: 12 },
+  teens: { label: "Teens 12+", min: 12, max: 100 },
+};
+
 export async function getAllSitters(filters?: {
   date?: string; // "YYYY-MM-DD"
   time?: string; // "HH:MM" — optional; when omitted, matches any slot that day
+  wwcc?: boolean;
+  firstAid?: boolean;
+  schoolPickup?: boolean;
+  eveningCare?: boolean;
+  weekend?: boolean;
+  ageBand?: AgeBand;
 }): Promise<SitterProfile[]> {
-  const { date, time } = filters ?? {};
+  const { date, time, wwcc, firstAid, schoolPickup, eveningCare, weekend, ageBand } =
+    filters ?? {};
 
   let availabilityWhere;
   if (date) {
@@ -64,9 +97,26 @@ export async function getAllSitters(filters?: {
     }
   }
 
+  const andClauses: Prisma.SitterProfileWhereInput[] = [];
+  if (availabilityWhere) andClauses.push(availabilityWhere);
+  if (wwcc) andClauses.push({ wwccConfirmed: true });
+  if (firstAid) andClauses.push({ firstAidCertified: true });
+  if (schoolPickup) andClauses.push({ offersSchoolPickup: true });
+  if (eveningCare) andClauses.push({ offersEveningCare: true });
+  if (weekend) {
+    andClauses.push({ availability: { some: { dayOfWeek: { in: WEEKEND_DAYS } } } });
+  }
+  if (ageBand) {
+    const band = AGE_BANDS[ageBand];
+    andClauses.push({
+      bestWithAgeMin: { lte: band.max },
+      bestWithAgeMax: { gte: band.min },
+    });
+  }
+
   const profiles = await prisma.sitterProfile.findMany({
-    where: availabilityWhere,
-    include: { user: true },
+    where: andClauses.length > 0 ? { AND: andClauses } : undefined,
+    include: { user: true, availability: true },
     orderBy: { user: { createdAt: "asc" } },
   });
   return profiles.map(toSitterProfile);
@@ -93,7 +143,16 @@ export async function getSitterById(
 ): Promise<SitterProfile | null> {
   const profile = await prisma.sitterProfile.findUnique({
     where: { id },
-    include: { user: true },
+    include: { user: true, availability: true },
   });
   return profile ? toSitterProfile(profile) : null;
+}
+
+export async function getSittersByIds(ids: string[]): Promise<SitterProfile[]> {
+  if (ids.length === 0) return [];
+  const profiles = await prisma.sitterProfile.findMany({
+    where: { id: { in: ids } },
+    include: { user: true, availability: true },
+  });
+  return profiles.map(toSitterProfile);
 }
