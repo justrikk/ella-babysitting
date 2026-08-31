@@ -95,25 +95,28 @@ export default async function Home() {
               Bundeena &amp; Maianbar
             </span>
             <h1 className="mt-6 text-4xl font-semibold tracking-tight text-white sm:text-6xl">
-              Local babysitting you can trust
+              Find a trusted local babysitter
             </h1>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg">
-              Every parent and sitter is personally approved by the Sitter
-              Sisters Team before they can book or message. Browse
-              who&apos;s available, then request to book.
+              Connecting local families with reliable babysitters, right in
+              your community.
+            </p>
+            <p className="mt-3 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg">
+              Browse available sitters, find the right match for your
+              family, and request a booking when you&apos;re ready.
             </p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/sitters"
                 className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-lg shadow-black/20 transition hover:bg-primary-50"
               >
-                Find a sitter
+                Find a Babysitter
               </Link>
               <Link
                 href="/sitters/apply"
                 className="rounded-full border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
               >
-                Become a sitter
+                Become a Sitter
               </Link>
             </div>
           </div>
