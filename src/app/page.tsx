@@ -8,7 +8,7 @@ import {
   IconCalendarHeart,
   IconLeaf,
   IconClock,
-  IconWaves,
+  IconLock,
 } from "@/components/icons";
 
 const steps = [
@@ -49,24 +49,24 @@ const trustPoints = [
 
 const goodToKnow = [
   {
-    icon: IconWaves,
-    title: "Right on the National Park",
-    body: "Bundeena & Maianbar sit at the edge of Royal National Park — plenty of beach and bush for sitters to explore with kids.",
-  },
-  {
-    icon: IconCalendarHeart,
-    title: "Meet first, book second",
-    body: "A short meet-and-greet before the first booking helps kids feel comfortable faster with a new sitter.",
+    icon: IconSearch,
+    title: "Search by date & time",
+    body: "See who's actually free before you request — availability is based on each sitter's real weekly schedule, not just a listing.",
   },
   {
     icon: IconShieldCheck,
-    title: "Hand over the essentials",
-    body: "Allergies, bedtime routine and an emergency contact — sharing these upfront makes every booking smoother.",
+    title: "WWCC & First Aid on file",
+    body: "Sitters 18 and over hold a valid Working with Children Check, and many are Nationally Recognised First Aid certified — visible on their profile.",
   },
   {
-    icon: IconLeaf,
-    title: "Ferry-only living",
-    body: "Maianbar has no road access — it's ferry or a walk through the park, which is part of why everyone here tends to know everyone.",
+    icon: IconLock,
+    title: "Emergency contacts, unlocked securely",
+    body: "A small $4.95 booking fee confirms your booking and shares your sitter's emergency contacts directly with you — never public, never before that.",
+  },
+  {
+    icon: IconCalendarHeart,
+    title: "Meet first, book with confidence",
+    body: "A short meet-and-greet before the first booking helps kids feel comfortable with a new sitter from day one.",
   },
 ];
 
@@ -77,61 +77,46 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col flex-1">
-      <section className="border-b border-warm-200 bg-gradient-to-b from-primary-50 to-white">
-        <div className="mx-auto grid max-w-5xl items-center gap-10 px-4 py-16 sm:grid-cols-2">
-          <div className="text-center sm:text-left">
-            <span className="inline-block rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold tracking-wide text-primary-700 uppercase">
+      <section className="relative flex min-h-[560px] items-center overflow-hidden sm:min-h-[680px]">
+        <Image
+          src="/images/hero-beach.jpg"
+          alt="A child looking out at the water in Bundeena"
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-900/92 via-primary-900/55 to-primary-900/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+
+        <div className="relative mx-auto w-full max-w-5xl px-4">
+          <div className="max-w-xl">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold tracking-[0.15em] text-white uppercase backdrop-blur-sm">
               Bundeena &amp; Maianbar
             </span>
-            <h1 className="mt-4 text-3xl font-semibold tracking-tight text-warm-900 sm:text-4xl">
-              Local Babysitting you can trust
+            <h1 className="mt-6 text-4xl font-semibold tracking-tight text-white sm:text-6xl">
+              Local babysitting you can trust
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-warm-600 sm:mx-0">
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg">
               Every parent and sitter is personally approved by the Sitter
               Sisters Team before they can book or message. Browse
-              who&apos;s available, then request to book — easy.
+              who&apos;s available, then request to book.
             </p>
-            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:justify-start">
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/sitters"
-                className="rounded-full bg-primary-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-700"
+                className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-lg shadow-black/20 transition hover:bg-primary-50"
               >
                 Find a sitter
               </Link>
               <Link
                 href="/sitters/apply"
-                className="rounded-full border border-warm-300 px-5 py-2.5 text-sm font-medium text-warm-700 hover:bg-warm-50"
+                className="rounded-full border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
               >
                 Become a sitter
               </Link>
             </div>
           </div>
-          <div className="relative mx-auto hidden aspect-square w-full max-w-sm overflow-hidden rounded-full bg-primary-100 sm:block">
-            <Image
-              src="/images/hero-beach.jpg"
-              alt="A child looking out at the water in Bundeena"
-              fill
-              className="object-cover"
-              sizes="(min-width: 640px) 384px, 0px"
-              priority
-            />
-          </div>
-        </div>
-      </section>
-
-      <section className="border-b border-warm-200">
-        <div className="relative h-56 w-full sm:h-72">
-          <Image
-            src="/images/local-bay.jpg"
-            alt="Golden-hour view over the bay at Bundeena"
-            fill
-            className="object-cover"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0" />
-          <span className="absolute bottom-4 left-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold tracking-wide text-warm-800 uppercase">
-            Bundeena &amp; Maianbar
-          </span>
         </div>
       </section>
 
@@ -226,6 +211,40 @@ export default async function Home() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative flex h-72 items-center overflow-hidden sm:h-80">
+        <Image
+          src="/images/local-bay.jpg"
+          alt="Golden-hour view over the bay at Bundeena"
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-primary-900/60" />
+        <div className="relative mx-auto w-full max-w-5xl px-4 text-center">
+          <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+            Ready to find your Sitter Sister?
+          </h2>
+          <p className="mx-auto mt-2 max-w-md text-sm text-white/85 sm:text-base">
+            Join the network trusted by families across Bundeena &amp;
+            Maianbar.
+          </p>
+          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link
+              href="/sitters"
+              className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-primary-700 shadow-lg shadow-black/20 transition hover:bg-primary-50"
+            >
+              Find a sitter
+            </Link>
+            <Link
+              href="/sitters/apply"
+              className="rounded-full border border-white/40 bg-white/10 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+            >
+              Become a sitter
+            </Link>
           </div>
         </div>
       </section>
