@@ -19,10 +19,10 @@ export default function TermsPage() {
           </h2>
           <p className="mt-2">
             Sitter Sisters connects parents and sitters who are part
-            of a small, local network — everyone who joins is known to Ella
-            or vouched for by someone she knows. It is not an open
+            of a small, local network — everyone who joins is known to our
+            team or vouched for by someone we know. It is not an open
             marketplace, and it does not run formal background checks; trust
-            is based on Ella&apos;s personal approval of every account.
+            is based on our team&apos;s personal approval of every account.
           </p>
         </section>
 

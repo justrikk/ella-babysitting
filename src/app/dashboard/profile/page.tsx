@@ -48,8 +48,12 @@ export default async function SitterProfileEditorPage({
 
   // proxy.ts already requires an APPROVED session for /dashboard/*, but
   // that gate is approval-based, not role-based — parents land here too
-  // unless redirected explicitly.
-  if (!session || session.user.role !== "SITTER") {
+  // unless redirected explicitly. Admins are allowed through too, since an
+  // admin can also be a listed sitter (e.g. Ella's own profile).
+  if (
+    !session ||
+    (session.user.role !== "SITTER" && session.user.role !== "ADMIN")
+  ) {
     redirect("/dashboard");
   }
 

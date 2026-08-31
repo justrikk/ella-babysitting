@@ -255,3 +255,11 @@ model PushSubscription {
   auth      String
   createdAt DateTime @default(now())
 }
+
+// "Sitter Sisters Club" newsletter — footer signup box (src/components/footer.tsx).
+// Deliberately separate from User: anyone can subscribe without an account.
+model NewsletterSubscriber {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  subscribedAt DateTime @default(now())
+}

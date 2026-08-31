@@ -209,14 +209,15 @@ export async function decideApproval(
 }
 
 // Self-service profile editor (src/app/dashboard/profile) — only reachable
-// by a signed-in, APPROVED sitter editing their own profile. proxy.ts
+// by a signed-in, APPROVED sitter (or an admin who is also a listed
+// sitter, e.g. Ella's own profile) editing their own profile. proxy.ts
 // already gates /dashboard/* on APPROVED sessions; the role + ownership
 // checks below are the part it can't express.
 async function requireOwnSitterProfile() {
   const session = await auth();
   if (
     !session ||
-    session.user.role !== "SITTER" ||
+    (session.user.role !== "SITTER" && session.user.role !== "ADMIN") ||
     session.user.approvalStatus !== "APPROVED"
   ) {
     throw new Error("Not authorized");
@@ -414,6 +415,40 @@ export async function requestBooking(formData: FormData) {
 // Charges the real AUD $4.95 booking fee via Square (src/lib/payments.ts —
 // not a stub). sourceId is the card token the Web Payments SDK produced
 // client-side in src/app/bookings/[id]/page.tsx.
+const newsletterSchema = z.string().trim().toLowerCase().email();
+
+// Called directly from the footer's client component (not a <form action>)
+// so it can show inline success/error without navigating away from
+// whatever page the footer happened to be on.
+export async function subscribeToNewsletter(
+  email: string
+): Promise<{ ok: boolean; message: string }> {
+  const parsed = newsletterSchema.safeParse(email);
+  if (!parsed.success) {
+    return { ok: false, message: "Please enter a valid email address." };
+  }
+
+  try {
+    await prisma.newsletterSubscriber.create({
+      data: { email: parsed.data },
+    });
+  } catch (err) {
+    // Unique constraint — already subscribed. Not an error from the
+    // subscriber's point of view.
+    if (
+      err &&
+      typeof err === "object" &&
+      "code" in err &&
+      (err as { code?: string }).code === "P2002"
+    ) {
+      return { ok: true, message: "You're already on the list!" };
+    }
+    return { ok: false, message: "Something went wrong — please try again." };
+  }
+
+  return { ok: true, message: "You're on the list! Welcome to the club." };
+}
+
 export async function payBookingFeeAction(formData: FormData) {
   const session = await auth();
   if (!session) redirect("/signin");

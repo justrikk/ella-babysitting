@@ -70,13 +70,13 @@ export default async function SitterProfilePage({
         </h2>
         {sitter.approvalStatus !== "APPROVED" ? (
           <p className="mt-3 rounded-md bg-amber-50 border border-amber-200 p-3 text-sm text-amber-800">
-            {sitter.name} is still awaiting Ella&apos;s approval and
+            {sitter.name} is still awaiting approval and
             can&apos;t accept bookings yet.
           </p>
         ) : (
           <>
             <p className="mt-1 text-xs text-warm-500">
-              You&apos;ll need an Ella-approved account to send a request —
+              You&apos;ll need an approved account to send a request —
               new here?{" "}
               <a href="/join" className="text-primary-700 underline">
                 Request access

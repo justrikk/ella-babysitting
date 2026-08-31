@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { NavBar } from "@/components/nav-bar";
+import { Footer } from "@/components/footer";
 import { IosInstallBanner } from "@/components/ios-install-banner";
 
 // Not using next/font/google here: it fetches from fonts.googleapis.com at
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <IosInstallBanner />
         <NavBar />
         <main className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );

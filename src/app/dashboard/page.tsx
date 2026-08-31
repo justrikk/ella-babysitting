@@ -18,7 +18,7 @@ export default function DashboardPage() {
         Your bookings
       </h1>
       <p className="mt-1 text-sm text-warm-600">
-        Showing mock data for Ella&apos;s sitter dashboard. In production this
+        Showing mock data for the sitter dashboard. In production this
         filters by the signed-in user (parent or sitter).
       </p>
 

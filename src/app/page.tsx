@@ -1,7 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getAllSitters } from "@/lib/sitters";
 import { SitterCard } from "@/components/sitter-card";
-import { HeroIllustration } from "@/components/hero-illustration";
 import {
   IconSearch,
   IconShieldCheck,
@@ -14,18 +14,18 @@ import {
 const steps = [
   {
     icon: IconSearch,
-    title: "Browse who's local",
-    body: "See every sitter's experience, rate and reviews — no account needed to look.",
-  },
-  {
-    icon: IconShieldCheck,
-    title: "Ella approves your account",
-    body: "A quick request, then Ella — who knows the local sitters and families — signs off personally.",
+    title: "Search Availability",
+    body: "To get started, search availability for a Sitter Sister.",
   },
   {
     icon: IconCalendarHeart,
-    title: "Book and message directly",
-    body: "Once approved, send a booking request and sort the details in-app.",
+    title: "Connect",
+    body: "Get connected with our team and confirm availability.",
+  },
+  {
+    icon: IconShieldCheck,
+    title: "Confirm",
+    body: "Check references, and hire the Sitter Sister that works for you.",
   },
 ];
 
@@ -33,12 +33,12 @@ const trustPoints = [
   {
     icon: IconShieldCheck,
     title: "Approved by a real person",
-    body: "Every account is personally reviewed by Ella before it can book or message — not an algorithm.",
+    body: "Every account is personally reviewed by our team before it can book or message — not an algorithm.",
   },
   {
     icon: IconLeaf,
     title: "Kept genuinely local",
-    body: "Bundeena & Maianbar only. Sitters and families are people Ella already knows, or who are vouched for.",
+    body: "Bundeena & Maianbar only. Sitters and families are people our team already knows, or who are vouched for.",
   },
   {
     icon: IconClock,
@@ -87,9 +87,9 @@ export default async function Home() {
               Local Babysitting you can trust
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-warm-600 sm:mx-0">
-              Every parent and sitter is personally approved by Ella before
-              they can book or message. Browse who&apos;s available, then
-              request access to book.
+              Every parent and sitter is personally approved by the Sitter
+              Sisters Team before they can book or message. Browse
+              who&apos;s available, then request to book — easy.
             </p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:justify-start">
               <Link
@@ -106,13 +106,38 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-          <HeroIllustration className="mx-auto hidden w-full max-w-sm text-primary-300 sm:block" />
+          <div className="relative mx-auto hidden aspect-square w-full max-w-sm overflow-hidden rounded-full bg-primary-100 sm:block">
+            <Image
+              src="/images/hero-beach.jpg"
+              alt="A child looking out at the water in Bundeena"
+              fill
+              className="object-cover"
+              sizes="(min-width: 640px) 384px, 0px"
+              priority
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-warm-200">
+        <div className="relative h-56 w-full sm:h-72">
+          <Image
+            src="/images/local-bay.jpg"
+            alt="Golden-hour view over the bay at Bundeena"
+            fill
+            className="object-cover"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0" />
+          <span className="absolute bottom-4 left-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold tracking-wide text-warm-800 uppercase">
+            Bundeena &amp; Maianbar
+          </span>
         </div>
       </section>
 
       <section className="mx-auto w-full max-w-5xl px-4 py-12">
         <h2 className="mb-4 text-lg font-semibold text-warm-900">
-          Approved sitters near you
+          Meet Sitter Sister near you
         </h2>
         {approved.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -134,7 +159,7 @@ export default async function Home() {
       <section className="border-t border-warm-200 bg-white">
         <div className="mx-auto max-w-5xl px-4 py-14">
           <h2 className="text-center text-lg font-semibold text-warm-900">
-            How it works
+            Find a Sitter in 3 easy steps
           </h2>
           <div className="mt-8 grid gap-8 sm:grid-cols-3">
             {steps.map((step, i) => (
@@ -176,20 +201,31 @@ export default async function Home() {
       </section>
 
       <section className="border-t border-warm-200 bg-white">
-        <div className="mx-auto max-w-5xl px-4 py-14">
-          <h2 className="text-lg font-semibold text-warm-900">Good to know</h2>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {goodToKnow.map((item) => (
-              <div key={item.title} className="flex gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-700">
-                  <item.icon className="h-4 w-4" />
+        <div className="mx-auto grid max-w-5xl items-center gap-8 px-4 py-14 sm:grid-cols-2">
+          <div className="relative h-56 w-full overflow-hidden rounded-2xl sm:h-72">
+            <Image
+              src="/images/local-waves.jpg"
+              alt="Waves rolling onto the beach at sunrise"
+              fill
+              className="object-cover"
+              sizes="(min-width: 640px) 50vw, 100vw"
+            />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-warm-900">Good to know</h2>
+            <div className="mt-6 grid gap-4">
+              {goodToKnow.map((item) => (
+                <div key={item.title} className="flex gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-700">
+                    <item.icon className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-warm-900">{item.title}</p>
+                    <p className="mt-0.5 text-sm text-warm-600">{item.body}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-warm-900">{item.title}</p>
-                  <p className="mt-0.5 text-sm text-warm-600">{item.body}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -61,7 +61,7 @@ export function SitterApplyForm() {
         </select>
       </div>
       <div>
-        <label className={labelCls}>How does Ella know you?</label>
+        <label className={labelCls}>How do you know our team?</label>
         <input
           type="text"
           name="note"
@@ -196,7 +196,7 @@ export function SitterApplyForm() {
 
       <div className="rounded-md bg-amber-50 border border-amber-200 p-3 text-xs text-amber-800">
         Your bio, rate, photo, and availability aren&apos;t collected here —
-        you&apos;ll set those up yourself once Ella approves your
+        you&apos;ll set those up yourself once our team approves your
         application.
       </div>
 

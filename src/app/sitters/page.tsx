@@ -144,7 +144,7 @@ export default async function SittersPage({
           <p className="mt-10 text-center text-sm text-warm-500">
             {date || time
               ? "No sitters recurringly available at that time — try a different date/time, or "
-              : "No sitters yet — the first application will show up here once Ella approves it in "}
+              : "No sitters yet — the first application will show up here once our team approves it in "}
             {date || time ? (
               <Link href={buildHref({ suburb, sort })} className="text-primary-700 underline">
                 clear the search

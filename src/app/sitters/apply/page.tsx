@@ -13,16 +13,16 @@ export default async function SitterApplyPage({
         Become a Sitter Sister
       </h1>
       <p className="mt-2 text-sm text-warm-600">
-        This app is kept local to people Ella knows in Bundeena &amp;
-        Maianbar — no formal background check required. Ella reviews and
-        approves every sitter application personally before your profile
-        can accept bookings, so let her know how you two know each other.
+        This app is kept local to people our team knows in Bundeena &amp;
+        Maianbar — no formal background check required. Our team reviews
+        and approves every sitter application personally before your
+        profile can accept bookings, so let us know how you know us.
       </p>
 
       {success && (
         <div className="mt-6 rounded-md bg-green-50 border border-green-200 p-3 text-sm text-green-800">
-          Application sent — Ella will review it and you&apos;ll be able to
-          sign in with this email once approved.
+          Application sent — our team will review it and you&apos;ll be able
+          to sign in with this email once approved.
         </div>
       )}
       {error === "exists" && (

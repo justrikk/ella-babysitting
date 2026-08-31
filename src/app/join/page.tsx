@@ -13,16 +13,16 @@ export default async function JoinPage({
         Request access
       </h1>
       <p className="mt-2 text-sm text-warm-600">
-        This app is kept local to people Ella knows in Bundeena &amp;
-        Maianbar. Anyone can browse sitters, but you&apos;ll need Ella to
+        This app is kept local to people our team knows in Bundeena &amp;
+        Maianbar. Anyone can browse sitters, but you&apos;ll need our team to
         approve your account before you can send a booking request or
         message a sitter.
       </p>
 
       {success && (
         <div className="mt-6 rounded-md bg-green-50 border border-green-200 p-3 text-sm text-green-800">
-          Request sent — Ella will review it and you&apos;ll be able to sign
-          in with this email once approved.
+          Request sent — our team will review it and you&apos;ll be able to
+          sign in with this email once approved.
         </div>
       )}
       {error === "exists" && (
@@ -79,7 +79,7 @@ export default async function JoinPage({
         </div>
         <div>
           <label className="block text-sm font-medium text-warm-700">
-            How does Ella know you?
+            How do you know our team?
           </label>
           <input
             type="text"
