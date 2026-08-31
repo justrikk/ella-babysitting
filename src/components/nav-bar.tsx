@@ -25,9 +25,11 @@ export async function NavBar() {
           Admin
         </Link>
       )}
-      <Link href="/sitters/apply" className={ctaCls}>
-        Become a Sitter Sister
-      </Link>
+      {(!session || session.user.role === "PARENT") && (
+        <Link href="/sitters/apply" className={ctaCls}>
+          Become a Sitter Sister
+        </Link>
+      )}
       {session ? (
         <form
           action={async () => {

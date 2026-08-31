@@ -51,13 +51,14 @@ enum PaymentStatus {
 model User {
   id             String         @id @default(cuid())
   email          String         @unique
-  emailVerified  DateTime?      // set by Auth.js on magic-link verification
+  emailVerified  DateTime?      // no longer set by anything — password auth has no email-verification step
   image          String?        // Auth.js adapter expects this field to exist
   name           String?        // null for accounts created by magic-link sign-in with no prior /join or /sitters/apply form (e.g. ADMIN_EMAILS auto-promotion)
   phone          String?
   suburb         String?        // "Bundeena" | "Maianbar" — informal, not enforced
   role           Role           @default(PARENT)
   referralNote   String?        // "how does Ella know you" — shown to Ella in the approval queue
+  password       String?        // bcrypt hash (src/lib/password.ts) — null until set via signup or the forgot-password flow (src/app/signin/forgot-password)
 
   // Admin approval gate — required before a user can book, message, or
   // (for sitters) appear as bookable. Signing up does not grant access.
@@ -74,10 +75,26 @@ model User {
   pushSubscriptions PushSubscription[]
   accounts          Account[]
   sessions          Session[]
+  passwordResetTokens PasswordResetToken[]
+}
+
+// Single-use tokens for the forgot/set-password flow (src/lib/actions.ts).
+// Only the sha256 hash of the token is stored, so a DB read alone can't be
+// used to reset someone's password.
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }
 
 // --- Auth.js (NextAuth v5) Prisma adapter models ---
-// Required schema shape: https://authjs.dev/getting-started/adapters/prisma
+// No longer wired up to a provider (auth.ts uses Credentials + JWT
+// sessions, not the Prisma adapter) — kept unused rather than dropped, in
+// case an OAuth provider is added later. Required schema shape:
+// https://authjs.dev/getting-started/adapters/prisma
 
 model Account {
   id                String  @id @default(cuid())

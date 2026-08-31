@@ -36,8 +36,8 @@ export default async function SitterApplyPage({
       )}
       {error === "invalid" && (
         <div className="mt-6 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-800">
-          Please fill in all fields, including both emergency contacts and
-          the terms checkbox.
+          Please fill in all fields, including both emergency contacts, the
+          terms checkbox, and a matching password of at least 8 characters.
         </div>
       )}
 

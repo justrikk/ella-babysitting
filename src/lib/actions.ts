@@ -1,23 +1,46 @@
 "use server";
 
 import { z } from "zod";
+import crypto from "crypto";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
+import { Resend } from "resend";
+import { AuthError } from "next-auth";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/auth";
+import { auth, signIn } from "@/auth";
 import { getSupabaseServiceClient, SITTER_AVATARS_BUCKET } from "@/lib/supabase";
 import { payBookingFee } from "@/lib/payments";
+import { hashPassword } from "@/lib/password";
+import { verifyTurnstileToken } from "@/lib/turnstile";
 
 const BOOKING_FEE_CENTS = 495;
 
 const suburbSchema = z.enum(["Bundeena", "Maianbar"]);
+const passwordSchema = z.string().min(8, "Password must be at least 8 characters.");
 
-const joinSchema = z.object({
-  name: z.string().trim().min(1),
-  email: z.string().trim().toLowerCase().email(),
-  suburb: suburbSchema,
-  note: z.string().trim().optional(),
-});
+async function baseUrl() {
+  const h = await headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+  const proto = h.get("x-forwarded-proto") ?? "https";
+  return `${proto}://${host}`;
+}
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const joinSchema = z
+  .object({
+    name: z.string().trim().min(1),
+    email: z.string().trim().toLowerCase().email(),
+    suburb: suburbSchema,
+    note: z.string().trim().optional(),
+    password: passwordSchema,
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match.",
+    path: ["confirmPassword"],
+  });
 
 export async function requestParentAccess(formData: FormData) {
   const parsed = joinSchema.safeParse({
@@ -25,10 +48,12 @@ export async function requestParentAccess(formData: FormData) {
     email: formData.get("email"),
     suburb: formData.get("suburb"),
     note: formData.get("note"),
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
   });
 
   if (!parsed.success) redirect("/join?error=invalid");
-  const { name, email, suburb, note } = parsed.data;
+  const { name, email, suburb, note, password } = parsed.data;
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) redirect("/join?error=exists");
@@ -41,6 +66,7 @@ export async function requestParentAccess(formData: FormData) {
       referralNote: note || null,
       role: "PARENT",
       approvalStatus: "PENDING",
+      password: await hashPassword(password),
     },
   });
 
@@ -90,6 +116,8 @@ const sitterApplySchema = z
     termsAccepted: z.literal("on", {
       message: "You must accept the terms to sign up.",
     }),
+    password: passwordSchema,
+    confirmPassword: z.string(),
   })
   .refine(
     (data) =>
@@ -107,7 +135,11 @@ const sitterApplySchema = z
       message: "A Working with Children Check is required for sitters 18 and over.",
       path: ["wwccConfirmed"],
     }
-  );
+  )
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match.",
+    path: ["confirmPassword"],
+  });
 
 export async function applyAsSitter(formData: FormData) {
   const parsed = sitterApplySchema.safeParse({
@@ -129,6 +161,8 @@ export async function applyAsSitter(formData: FormData) {
     firstAidCertified: formData.get("firstAidCertified") || undefined,
     otherCertifications: formData.get("otherCertifications") || undefined,
     termsAccepted: formData.get("termsAccepted"),
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
   });
 
   if (!parsed.success) redirect("/sitters/apply?error=invalid");
@@ -150,6 +184,7 @@ export async function applyAsSitter(formData: FormData) {
     wwccExpiry,
     firstAidCertified,
     otherCertifications,
+    password,
   } = parsed.data;
 
   const existing = await prisma.user.findUnique({ where: { email } });
@@ -164,6 +199,7 @@ export async function applyAsSitter(formData: FormData) {
       referralNote: note || null,
       role: "SITTER",
       approvalStatus: "PENDING",
+      password: await hashPassword(password),
       sitterProfile: {
         create: {
           dateOfBirth,
@@ -185,6 +221,126 @@ export async function applyAsSitter(formData: FormData) {
   });
 
   redirect("/sitters/apply?success=1");
+}
+
+// --- Password sign-in / forgot-password (src/app/signin) ---
+
+export async function signInWithPassword(formData: FormData) {
+  const turnstileToken = formData.get("cf-turnstile-response");
+  const h = await headers();
+  const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  const captchaOk = await verifyTurnstileToken(
+    typeof turnstileToken === "string" ? turnstileToken : null,
+    ip
+  );
+  if (!captchaOk) redirect("/signin?error=captcha");
+
+  try {
+    await signIn("credentials", {
+      email: String(formData.get("email") ?? ""),
+      password: String(formData.get("password") ?? ""),
+      redirectTo: "/dashboard",
+    });
+  } catch (err) {
+    if (err instanceof AuthError) {
+      redirect("/signin?error=invalid");
+    }
+    throw err; // NEXT_REDIRECT on success — let it propagate.
+  }
+}
+
+const RESET_TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+function hashToken(token: string) {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
+
+export async function requestPasswordReset(formData: FormData) {
+  const turnstileToken = formData.get("cf-turnstile-response");
+  const h = await headers();
+  const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  const captchaOk = await verifyTurnstileToken(
+    typeof turnstileToken === "string" ? turnstileToken : null,
+    ip
+  );
+  if (!captchaOk) redirect("/signin/forgot-password?error=captcha");
+
+  const parsed = z
+    .string()
+    .trim()
+    .toLowerCase()
+    .email()
+    .safeParse(formData.get("email"));
+
+  // Same confirmation either way — don't reveal whether an email is
+  // registered.
+  if (parsed.success) {
+    const user = await prisma.user.findUnique({ where: { email: parsed.data } });
+    if (user) {
+      const rawToken = crypto.randomBytes(32).toString("hex");
+      await prisma.passwordResetToken.deleteMany({ where: { userId: user.id } });
+      await prisma.passwordResetToken.create({
+        data: {
+          userId: user.id,
+          tokenHash: hashToken(rawToken),
+          expiresAt: new Date(Date.now() + RESET_TOKEN_TTL_MS),
+        },
+      });
+
+      const resetUrl = `${await baseUrl()}/signin/reset-password?token=${rawToken}`;
+      await resend.emails.send({
+        from: process.env.EMAIL_FROM!,
+        to: user.email,
+        subject: "Reset your Sitter Sisters password",
+        html: `<p>Click below to set a new password. This link expires in 1 hour.</p><p><a href="${resetUrl}">${resetUrl}</a></p><p>If you didn't request this, you can ignore this email.</p>`,
+      });
+    }
+  }
+
+  redirect("/signin/forgot-password?success=1");
+}
+
+export async function resetPassword(formData: FormData) {
+  const parsed = z
+    .object({
+      token: z.string().min(1),
+      password: passwordSchema,
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords don't match.",
+      path: ["confirmPassword"],
+    })
+    .safeParse({
+      token: formData.get("token"),
+      password: formData.get("password"),
+      confirmPassword: formData.get("confirmPassword"),
+    });
+
+  if (!parsed.success) {
+    redirect(
+      `/signin/reset-password?token=${formData.get("token")}&error=invalid`
+    );
+  }
+  const { token, password } = parsed.data;
+
+  const resetToken = await prisma.passwordResetToken.findUnique({
+    where: { tokenHash: hashToken(token) },
+  });
+
+  if (!resetToken || resetToken.expiresAt < new Date()) {
+    redirect("/signin/forgot-password?error=expired");
+  }
+
+  await prisma.user.update({
+    where: { id: resetToken.userId },
+    data: { password: await hashPassword(password) },
+  });
+  await prisma.passwordResetToken.deleteMany({
+    where: { userId: resetToken.userId },
+  });
+
+  redirect("/signin?success=passwordset");
 }
 
 export async function decideApproval(

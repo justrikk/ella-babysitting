@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { auth } from "@/auth";
 import { getAllSitters, getAvailableDaysOfWeek } from "@/lib/sitters";
 import { SitterCard } from "@/components/sitter-card";
 import { AvailabilityCalendar } from "@/components/availability-calendar";
@@ -73,11 +74,15 @@ const goodToKnow = [
 
 export default async function Home() {
   // Anyone can browse — approval only gates booking/messaging, not viewing.
-  const [sitters, availableDaysOfWeek] = await Promise.all([
+  const [session, sitters, availableDaysOfWeek] = await Promise.all([
+    auth(),
     getAllSitters(),
     getAvailableDaysOfWeek(),
   ]);
   const approved = sitters.filter((s) => s.approvalStatus === "APPROVED");
+  // Sitters and admins already have a listing — the "become a sitter" pitch
+  // is only relevant to guests and parent accounts.
+  const showBecomeSitterCta = !session || session.user.role === "PARENT";
 
   return (
     <div className="flex flex-col flex-1">
@@ -116,12 +121,14 @@ export default async function Home() {
               >
                 Find a Babysitter
               </Link>
-              <Link
-                href="/sitters/apply"
-                className="rounded-full border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
-              >
-                Become a Sitter
-              </Link>
+              {showBecomeSitterCta && (
+                <Link
+                  href="/sitters/apply"
+                  className="rounded-full border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+                >
+                  Become a Sitter
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -261,12 +268,14 @@ export default async function Home() {
             >
               Find a sitter
             </Link>
-            <Link
-              href="/sitters/apply"
-              className="rounded-full border border-white/40 bg-white/10 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
-            >
-              Become a sitter
-            </Link>
+            {showBecomeSitterCta && (
+              <Link
+                href="/sitters/apply"
+                className="rounded-full border border-white/40 bg-white/10 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+              >
+                Become a sitter
+              </Link>
+            )}
           </div>
         </div>
       </section>

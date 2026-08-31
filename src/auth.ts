@@ -1,36 +1,56 @@
 import NextAuth from "next-auth";
-import Resend from "next-auth/providers/resend";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
+import { verifyPassword } from "@/lib/password";
 
-// Magic-link auth via Resend — no passwords to manage, and Ella's admin
-// role is just data (see ADMIN_EMAILS below), not a separate credential.
-//
-// Sign-in flow when the user already has a User row from /join or
-// /sitters/apply (created PENDING, no account yet): the Prisma adapter
-// looks up by email and attaches the new Account to that existing User
-// instead of creating a duplicate — so applying and then signing in later
-// with the same email lands on the same account.
+// Password auth via Credentials — Ella's admin role is just data
+// (see ADMIN_EMAILS below), not a separate credential. Credentials sign-in
+// requires JWT sessions (Auth.js has no Account row to hang a database
+// session off for a non-OAuth, non-adapter-verified provider).
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
   providers: [
-    Resend({
-      apiKey: process.env.RESEND_API_KEY,
-      from: process.env.EMAIL_FROM,
+    Credentials({
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const email =
+          typeof credentials?.email === "string"
+            ? credentials.email.trim().toLowerCase()
+            : "";
+        const password =
+          typeof credentials?.password === "string" ? credentials.password : "";
+        if (!email || !password) return null;
+
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user || !user.password) return null;
+
+        const valid = await verifyPassword(password, user.password);
+        if (!valid) return null;
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          image: user.image,
+          role: user.role,
+          approvalStatus: user.approvalStatus,
+        };
+      },
     }),
   ],
   pages: {
     signIn: "/signin",
-    verifyRequest: "/signin/check-email",
   },
   session: {
-    strategy: "database",
+    strategy: "jwt",
   },
   callbacks: {
-    // Runs on every successful sign-in (new or returning user), before the
-    // session is issued — the single place that guarantees anyone in
-    // ADMIN_EMAILS is ADMIN/APPROVED, whether this is their first-ever
-    // sign-in or they already had a PENDING row from /join.
+    // Runs on every successful sign-in — the single place that guarantees
+    // anyone in ADMIN_EMAILS is ADMIN/APPROVED. Unlike the old magic-link
+    // flow, a Credentials user always already exists in the DB by the time
+    // this runs (authorize() requires it), so a plain update() is safe.
     async signIn({ user }) {
       const adminEmails = (process.env.ADMIN_EMAILS ?? "")
         .split(",")
@@ -43,14 +63,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         adminEmails.includes(user.email.toLowerCase()) &&
         (user.role !== "ADMIN" || user.approvalStatus !== "APPROVED")
       ) {
-        // updateMany, not update: on the first signIn callback invocation
-        // (when the magic link is requested), Auth.js passes a user object
-        // that hasn't been persisted to the DB yet for brand-new emails —
-        // update() would throw "record not found" and block the email from
-        // ever being sent. updateMany() no-ops instead; the real promotion
-        // happens on the second invocation, once the link is clicked and
-        // the user row actually exists.
-        await prisma.user.updateMany({
+        const updated = await prisma.user.update({
           where: { id: user.id },
           data: {
             role: "ADMIN",
@@ -58,21 +71,39 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             approvedAt: new Date(),
           },
         });
+        user.role = updated.role;
+        user.approvalStatus = updated.approvalStatus;
       }
 
       return true;
     },
-    async session({ session, user }) {
-      // Re-read role/approvalStatus fresh rather than trusting the `user`
-      // object passed in, since the signIn callback above may have just
-      // changed them in the same request.
-      const fresh = await prisma.user.findUnique({
-        where: { id: user.id },
-        select: { role: true, approvalStatus: true },
-      });
-      session.user.id = user.id;
-      session.user.role = fresh?.role ?? user.role;
-      session.user.approvalStatus = fresh?.approvalStatus ?? user.approvalStatus;
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+        token.approvalStatus = user.approvalStatus;
+      } else if (token.id) {
+        // Re-read on every request (not just at sign-in) so an admin
+        // approval or role change takes effect immediately, matching the
+        // old database-session behavior instead of waiting for a fresh
+        // sign-in to pick up a stale JWT.
+        const fresh = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { role: true, approvalStatus: true },
+        });
+        // User no longer exists (deleted) — kill the session instead of
+        // keeping stale role/approvalStatus from the original sign-in.
+        if (!fresh) return null;
+        token.role = fresh.role;
+        token.approvalStatus = fresh.approvalStatus;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.user.id = token.id as string;
+      session.user.role = token.role as typeof session.user.role;
+      session.user.approvalStatus =
+        token.approvalStatus as typeof session.user.approvalStatus;
       return session;
     },
   },

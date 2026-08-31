@@ -36,7 +36,8 @@ export default async function JoinPage({
       )}
       {error === "invalid" && (
         <div className="mt-6 rounded-md bg-red-50 border border-red-200 p-3 text-sm text-red-800">
-          Please fill in all fields with a valid email.
+          Please fill in all fields with a valid email, and make sure your
+          password is at least 8 characters and matches.
         </div>
       )}
 
@@ -86,6 +87,31 @@ export default async function JoinPage({
             name="note"
             className="mt-1 w-full rounded-md border border-warm-300 px-3 py-2 text-sm"
             placeholder="e.g. neighbour, school parent, referred by Sam K."
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-warm-700">
+            Create a password
+          </label>
+          <input
+            type="password"
+            name="password"
+            required
+            minLength={8}
+            className="mt-1 w-full rounded-md border border-warm-300 px-3 py-2 text-sm"
+            placeholder="At least 8 characters"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-warm-700">
+            Confirm password
+          </label>
+          <input
+            type="password"
+            name="confirmPassword"
+            required
+            minLength={8}
+            className="mt-1 w-full rounded-md border border-warm-300 px-3 py-2 text-sm"
           />
         </div>
 

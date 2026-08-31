@@ -15,3 +15,11 @@ declare module "next-auth" {
     approvalStatus: ApprovalStatus;
   }
 }
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    role: Role;
+    approvalStatus: ApprovalStatus;
+  }
+}

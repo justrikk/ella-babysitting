@@ -200,6 +200,28 @@ export function SitterApplyForm() {
         application.
       </div>
 
+      <div>
+        <label className={labelCls}>Create a password</label>
+        <input
+          type="password"
+          name="password"
+          required
+          minLength={8}
+          className={inputCls}
+          placeholder="At least 8 characters"
+        />
+      </div>
+      <div>
+        <label className={labelCls}>Confirm password</label>
+        <input
+          type="password"
+          name="confirmPassword"
+          required
+          minLength={8}
+          className={inputCls}
+        />
+      </div>
+
       <label className="flex items-start gap-2 text-sm text-warm-700">
         <input type="checkbox" name="termsAccepted" required className="mt-1" />
         <span>
