@@ -47,6 +47,29 @@ const trustPoints = [
     title: "No lock-in, ever",
     body: "Browse and request access any time. Nothing to sign up for just to see who's around.",
   },
+  {
+    icon: IconSearch,
+    title: "You choose, always",
+    body: "We never assign a sitter to you. Browse profiles, compare availability, and pick who feels right for your family.",
+  },
+];
+
+const approvalStandard = [
+  {
+    icon: IconShieldCheck,
+    title: "Personally reviewed",
+    body: "Every sitter's application is reviewed by our team before they're listed — not an automated approval.",
+  },
+  {
+    icon: IconSearch,
+    title: "Safety details on every profile",
+    body: "Working with Children Check and First Aid status are shown on each sitter's profile, so you can check before you choose.",
+  },
+  {
+    icon: IconCalendarHeart,
+    title: "You decide, not us",
+    body: "We don't rank or push specific sitters — every approved profile is presented the same way. The choice is entirely yours.",
+  },
 ];
 
 const goodToKnow = [
@@ -104,39 +127,51 @@ export default async function Home() {
               Bundeena &amp; Maianbar
             </span>
             <h1 className="mt-6 text-4xl font-semibold tracking-tight text-white sm:text-6xl">
-              Find a trusted local babysitter
+              Choose the sitter who feels right for your family.
             </h1>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg">
-              Connecting local families with reliable babysitters, right in
-              your community.
-            </p>
-            <p className="mt-3 max-w-lg text-base leading-relaxed text-white/90 sm:text-lg">
-              Browse available sitters, find the right match for your
-              family, and request a booking when you&apos;re ready.
+              Browse personally approved local babysitters, learn about their
+              experience and availability, and choose who you&apos;d feel
+              comfortable welcoming into your home.
             </p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/sitters"
                 className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-lg shadow-black/20 transition hover:bg-primary-50"
               >
-                Find a Babysitter
+                Browse Sitters
               </Link>
-              {showBecomeSitterCta && (
-                <Link
-                  href="/sitters/apply"
-                  className="rounded-full border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
-                >
-                  Become a Sitter
-                </Link>
-              )}
+              <Link
+                href="#how-it-works"
+                className="rounded-full border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+              >
+                How Sitter Sisters Works
+              </Link>
             </div>
+            <p className="mt-6 text-xs font-medium tracking-wide text-white/75 sm:text-sm">
+              Personally approved &middot; Local sitters &middot; You choose
+              &middot; Private &amp; secure
+            </p>
           </div>
+        </div>
+      </section>
+
+      <section className="border-b border-warm-200 bg-white">
+        <div className="mx-auto max-w-2xl px-4 py-14 text-center">
+          <h2 className="text-2xl font-semibold text-warm-900">
+            Your family. Your choice.
+          </h2>
+          <p className="mt-3 text-base leading-relaxed text-warm-600">
+            We don&apos;t assign you a babysitter. Browse our approved local
+            sitters, compare their profiles and availability, and choose the
+            person who feels right for your family.
+          </p>
         </div>
       </section>
 
       <section className="mx-auto w-full max-w-5xl px-4 py-12">
         <h2 className="mb-4 text-lg font-semibold text-warm-900">
-          Meet Sitter Sister near you
+          Featured local sitters
         </h2>
         {approved.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -156,21 +191,50 @@ export default async function Home() {
       </section>
 
       <section className="border-t border-warm-200 bg-warm-50">
-        <div className="mx-auto max-w-3xl px-4 py-14">
+        <div className="mx-auto max-w-5xl px-4 py-14">
           <h2 className="text-center text-lg font-semibold text-warm-900">
-            Check availability at a glance
+            Why families choose Sitter Sisters
           </h2>
-          <p className="mx-auto mt-2 max-w-md text-center text-sm text-warm-600">
-            See which dates over the next two months have a Sitter Sister
-            free, and jump straight into a search.
-          </p>
-          <div className="mt-8">
-            <AvailabilityCalendar availableDaysOfWeek={availableDaysOfWeek} />
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {trustPoints.map((point) => (
+              <div
+                key={point.title}
+                className="rounded-xl border border-warm-200 bg-white p-5"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-100 text-accent-600">
+                  <point.icon className="h-5 w-5" />
+                </div>
+                <p className="mt-3 font-medium text-warm-900">{point.title}</p>
+                <p className="mt-1 text-sm text-warm-600">{point.body}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       <section className="border-t border-warm-200 bg-white">
+        <div className="mx-auto max-w-5xl px-4 py-14">
+          <h2 className="text-center text-lg font-semibold text-warm-900">
+            The Sitter Sisters approval standard
+          </h2>
+          <p className="mx-auto mt-2 max-w-md text-center text-sm text-warm-600">
+            Sitter Sisters builds the trusted pool. You make the final choice.
+          </p>
+          <div className="mt-8 grid gap-8 sm:grid-cols-3">
+            {approvalStandard.map((point) => (
+              <div key={point.title} className="text-center sm:text-left">
+                <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-primary-100 text-primary-700 sm:mx-0">
+                  <point.icon className="h-5 w-5" />
+                </div>
+                <p className="mt-3 font-medium text-warm-900">{point.title}</p>
+                <p className="mt-1 text-sm text-warm-600">{point.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="how-it-works" className="border-t border-warm-200 bg-warm-50">
         <div className="mx-auto max-w-5xl px-4 py-14">
           <h2 className="text-center text-lg font-semibold text-warm-900">
             Find a Sitter in 3 easy steps
@@ -192,29 +256,22 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="border-t border-warm-200 bg-warm-50">
-        <div className="mx-auto max-w-5xl px-4 py-14">
+      <section className="border-t border-warm-200 bg-white">
+        <div className="mx-auto max-w-3xl px-4 py-14">
           <h2 className="text-center text-lg font-semibold text-warm-900">
-            Why families trust Sitter Sisters
+            Check availability at a glance
           </h2>
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            {trustPoints.map((point) => (
-              <div
-                key={point.title}
-                className="rounded-xl border border-warm-200 bg-white p-5"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-100 text-accent-600">
-                  <point.icon className="h-5 w-5" />
-                </div>
-                <p className="mt-3 font-medium text-warm-900">{point.title}</p>
-                <p className="mt-1 text-sm text-warm-600">{point.body}</p>
-              </div>
-            ))}
+          <p className="mx-auto mt-2 max-w-md text-center text-sm text-warm-600">
+            See which dates over the next two months have a Sitter Sister
+            free, and jump straight into a search.
+          </p>
+          <div className="mt-8">
+            <AvailabilityCalendar availableDaysOfWeek={availableDaysOfWeek} />
           </div>
         </div>
       </section>
 
-      <section className="border-t border-warm-200 bg-white">
+      <section className="border-t border-warm-200 bg-warm-50">
         <div className="mx-auto grid max-w-5xl items-center gap-8 px-4 py-14 sm:grid-cols-2">
           <div className="relative h-56 w-full overflow-hidden rounded-2xl sm:h-72">
             <Image
@@ -255,25 +312,25 @@ export default async function Home() {
         <div className="absolute inset-0 bg-primary-900/60" />
         <div className="relative mx-auto w-full max-w-5xl px-4 text-center">
           <h2 className="text-2xl font-semibold text-white sm:text-3xl">
-            Ready to find your Sitter Sister?
+            Ready to choose your Sitter Sister?
           </h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-white/85 sm:text-base">
-            Join the network trusted by families across Bundeena &amp;
-            Maianbar.
+            Browse approved local sitters and find the right fit for your
+            family.
           </p>
-          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+          <div className="mt-6 flex flex-col items-center justify-center gap-3">
             <Link
               href="/sitters"
               className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-primary-700 shadow-lg shadow-black/20 transition hover:bg-primary-50"
             >
-              Find a sitter
+              Find Your Sitter
             </Link>
             {showBecomeSitterCta && (
               <Link
                 href="/sitters/apply"
-                className="rounded-full border border-white/40 bg-white/10 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+                className="text-xs text-white/80 underline underline-offset-2 hover:text-white"
               >
-                Become a sitter
+                Are you a local sitter? Apply to join our team.
               </Link>
             )}
           </div>
