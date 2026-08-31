@@ -126,6 +126,17 @@ export default async function SittersPage({
             .
           </p>
         )}
+        {date && !time && (
+          <p className="mt-3 text-xs text-warm-500">
+            Showing sitters recurringly available on{" "}
+            {new Date(`${date}T00:00`).toLocaleDateString(undefined, {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+            })}
+            .
+          </p>
+        )}
 
         <div className="mt-6">
           {sitters.length > 0 && <SitterCarousel sitters={sitters} />}

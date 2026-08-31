@@ -33,26 +33,34 @@ const SEARCH_WINDOW_MINUTES = 60;
 
 export async function getAllSitters(filters?: {
   date?: string; // "YYYY-MM-DD"
-  time?: string; // "HH:MM"
+  time?: string; // "HH:MM" — optional; when omitted, matches any slot that day
 }): Promise<SitterProfile[]> {
   const { date, time } = filters ?? {};
 
   let availabilityWhere;
-  if (date && time) {
+  if (date) {
     const [y, m, d] = date.split("-").map(Number);
-    const [h, min] = time.split(":").map(Number);
-    if (!Number.isNaN(y) && !Number.isNaN(h)) {
+    if (!Number.isNaN(y) && !Number.isNaN(m) && !Number.isNaN(d)) {
       const dayOfWeek = new Date(y, m - 1, d).getDay();
-      const startMinute = h * 60 + min;
-      availabilityWhere = {
-        availability: {
-          some: {
-            dayOfWeek,
-            startMinute: { lte: startMinute },
-            endMinute: { gte: startMinute + SEARCH_WINDOW_MINUTES },
-          },
-        },
-      };
+      if (time) {
+        const [h, min] = time.split(":").map(Number);
+        if (!Number.isNaN(h)) {
+          const startMinute = h * 60 + min;
+          availabilityWhere = {
+            availability: {
+              some: {
+                dayOfWeek,
+                startMinute: { lte: startMinute },
+                endMinute: { gte: startMinute + SEARCH_WINDOW_MINUTES },
+              },
+            },
+          };
+        }
+      } else {
+        // Date given without a time (e.g. a calendar-day click) — match any
+        // slot that day of the week, regardless of time.
+        availabilityWhere = { availability: { some: { dayOfWeek } } };
+      }
     }
   }
 
@@ -62,6 +70,22 @@ export async function getAllSitters(filters?: {
     orderBy: { user: { createdAt: "asc" } },
   });
   return profiles.map(toSitterProfile);
+}
+
+// Which days of the week (0=Sun..6=Sat) have at least one APPROVED, bookable
+// sitter with a recurring availability slot — used by the homepage calendar.
+// Availability is a weekly recurring pattern with no date-specific
+// exceptions, so this is inherently a day-of-week aggregate, not a lookup
+// of specific calendar dates.
+export async function getAvailableDaysOfWeek(): Promise<Set<number>> {
+  const rows = await prisma.sitterAvailability.findMany({
+    where: {
+      sitterProfile: { user: { approvalStatus: "APPROVED" } },
+    },
+    select: { dayOfWeek: true },
+    distinct: ["dayOfWeek"],
+  });
+  return new Set(rows.map((r) => r.dayOfWeek));
 }
 
 export async function getSitterById(

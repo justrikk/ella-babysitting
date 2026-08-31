@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getAllSitters } from "@/lib/sitters";
+import { getAllSitters, getAvailableDaysOfWeek } from "@/lib/sitters";
 import { SitterCard } from "@/components/sitter-card";
+import { AvailabilityCalendar } from "@/components/availability-calendar";
 import {
   IconSearch,
   IconShieldCheck,
@@ -60,8 +61,8 @@ const goodToKnow = [
   },
   {
     icon: IconLock,
-    title: "Emergency contacts, unlocked securely",
-    body: "A small $4.95 booking fee confirms your booking and shares your sitter's emergency contacts directly with you — never public, never before that.",
+    title: "A small booking fee, paid directly to your sitter",
+    body: "At the time of booking, a small non-refundable $4.95 booking fee is charged — this helps bring Sitter Sisters to the local community. Payment for your sitter's time is then made directly to them on the day.",
   },
   {
     icon: IconCalendarHeart,
@@ -72,7 +73,10 @@ const goodToKnow = [
 
 export default async function Home() {
   // Anyone can browse — approval only gates booking/messaging, not viewing.
-  const sitters = await getAllSitters();
+  const [sitters, availableDaysOfWeek] = await Promise.all([
+    getAllSitters(),
+    getAvailableDaysOfWeek(),
+  ]);
   const approved = sitters.filter((s) => s.approvalStatus === "APPROVED");
 
   return (
@@ -142,6 +146,21 @@ export default async function Home() {
             .
           </p>
         )}
+      </section>
+
+      <section className="border-t border-warm-200 bg-warm-50">
+        <div className="mx-auto max-w-3xl px-4 py-14">
+          <h2 className="text-center text-lg font-semibold text-warm-900">
+            Check availability at a glance
+          </h2>
+          <p className="mx-auto mt-2 max-w-md text-center text-sm text-warm-600">
+            See which dates over the next two months have a Sitter Sister
+            free, and jump straight into a search.
+          </p>
+          <div className="mt-8">
+            <AvailabilityCalendar availableDaysOfWeek={availableDaysOfWeek} />
+          </div>
+        </div>
       </section>
 
       <section className="border-t border-warm-200 bg-white">
