@@ -12,6 +12,9 @@ export function Footer() {
               Local babysitting you can trust — Bundeena &amp; Maianbar.
             </p>
             <nav className="mt-4 flex gap-4 text-sm">
+              <Link href="/contact" className="hover:text-white">
+                Contact Us
+              </Link>
               <Link href="/terms" className="hover:text-white">
                 Terms &amp; Conditions
               </Link>

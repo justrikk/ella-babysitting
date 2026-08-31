@@ -605,6 +605,65 @@ export async function subscribeToNewsletter(
   return { ok: true, message: "You're on the list! Welcome to the club." };
 }
 
+// --- Contact form (src/app/contact) ---
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1),
+  email: z.string().trim().toLowerCase().email(),
+  subject: z.string().trim().optional(),
+  message: z.string().trim().min(1),
+});
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+export async function submitContactMessage(formData: FormData) {
+  const turnstileToken = formData.get("cf-turnstile-response");
+  const h = await headers();
+  const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  const captchaOk = await verifyTurnstileToken(
+    typeof turnstileToken === "string" ? turnstileToken : null,
+    ip
+  );
+  if (!captchaOk) redirect("/contact?error=captcha");
+
+  const parsed = contactSchema.safeParse({
+    name: formData.get("name"),
+    email: formData.get("email"),
+    subject: formData.get("subject"),
+    message: formData.get("message"),
+  });
+  if (!parsed.success) redirect("/contact?error=invalid");
+  const { name, email, subject, message } = parsed.data;
+
+  const adminEmails = (process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (adminEmails.length > 0) {
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM!,
+      to: adminEmails,
+      replyTo: email,
+      subject: subject
+        ? `Contact form: ${subject}`
+        : `New contact form message from ${name}`,
+      html: `<p><strong>From:</strong> ${escapeHtml(name)} (${escapeHtml(email)})</p>${
+        subject ? `<p><strong>Subject:</strong> ${escapeHtml(subject)}</p>` : ""
+      }<p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>`,
+    });
+  }
+
+  redirect("/contact?success=1");
+}
+
 export async function payBookingFeeAction(formData: FormData) {
   const session = await auth();
   if (!session) redirect("/signin");
