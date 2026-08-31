@@ -26,6 +26,7 @@ export function toSitterProfile(
     reviewCount: p.reviewCount,
     wwccConfirmed: p.wwccConfirmed,
     firstAidCertified: p.firstAidCertified,
+    otherCertifications: p.otherCertifications ?? undefined,
     bestWithAgeMin: p.bestWithAgeMin ?? undefined,
     bestWithAgeMax: p.bestWithAgeMax ?? undefined,
     offersSchoolPickup: p.offersSchoolPickup,

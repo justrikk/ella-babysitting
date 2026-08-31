@@ -2,9 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatCurrency } from "@/lib/mock-data";
 import { getSitterById } from "@/lib/sitters";
+import { formatWeeklyAvailability } from "@/lib/format-availability";
 import { ApprovalBadge } from "@/components/approval-badge";
 import { Avatar } from "@/components/avatar";
 import { BookingForm } from "@/components/booking-form";
+import { ShortlistButton } from "@/components/shortlist-button";
+import { IconShieldCheck, IconCalendarHeart } from "@/components/icons";
 
 export default async function SitterProfilePage({
   params,
@@ -14,6 +17,10 @@ export default async function SitterProfilePage({
   const { id } = await params;
   const sitter = await getSitterById(id);
   if (!sitter) notFound();
+
+  const hasAgeRange =
+    sitter.bestWithAgeMin !== undefined && sitter.bestWithAgeMax !== undefined;
+  const weeklyAvailability = formatWeeklyAvailability(sitter.availability);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
@@ -42,8 +49,34 @@ export default async function SitterProfilePage({
             </p>
           </div>
         </div>
-        <ApprovalBadge status={sitter.approvalStatus} />
+        <div className="flex shrink-0 items-center gap-2">
+          <ShortlistButton
+            sitterId={sitter.id}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-warm-50 text-primary-600 transition hover:bg-warm-100"
+          />
+          <ApprovalBadge status={sitter.approvalStatus} />
+        </div>
       </div>
+
+      {(hasAgeRange || sitter.offersSchoolPickup || sitter.offersEveningCare) && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {hasAgeRange && (
+            <span className="rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700">
+              Best with: Ages {sitter.bestWithAgeMin}–{sitter.bestWithAgeMax}
+            </span>
+          )}
+          {sitter.offersSchoolPickup && (
+            <span className="rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700">
+              School pickup
+            </span>
+          )}
+          {sitter.offersEveningCare && (
+            <span className="rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700">
+              Evening care
+            </span>
+          )}
+        </div>
+      )}
 
       {(sitter.backgroundCheckAt || sitter.idVerifiedAt) && (
         <div className="mt-3 flex gap-4 text-xs text-warm-500">
@@ -63,6 +96,55 @@ export default async function SitterProfilePage({
       )}
 
       <p className="mt-6 text-warm-700">{sitter.bio}</p>
+
+      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+        <div className="rounded-lg border border-warm-200 bg-white p-5">
+          <div className="flex items-center gap-2">
+            <IconShieldCheck className="h-4 w-4 text-primary-600" />
+            <h2 className="text-sm font-medium text-warm-900">
+              Safety &amp; qualifications
+            </h2>
+          </div>
+          <ul className="mt-3 space-y-1.5 text-sm text-warm-600">
+            <li>
+              {sitter.wwccConfirmed ? "✓" : "—"} Working with Children Check
+              (WWCC)
+            </li>
+            <li>
+              {sitter.firstAidCertified ? "✓" : "—"} Nationally Recognised
+              First Aid
+            </li>
+          </ul>
+          {sitter.otherCertifications && (
+            <p className="mt-2 text-xs text-warm-500">
+              {sitter.otherCertifications}
+            </p>
+          )}
+        </div>
+
+        <div className="rounded-lg border border-warm-200 bg-white p-5">
+          <div className="flex items-center gap-2">
+            <IconCalendarHeart className="h-4 w-4 text-primary-600" />
+            <h2 className="text-sm font-medium text-warm-900">
+              Weekly availability
+            </h2>
+          </div>
+          {weeklyAvailability.length > 0 ? (
+            <ul className="mt-3 space-y-1.5 text-sm text-warm-600">
+              {weeklyAvailability.map((slot) => (
+                <li key={slot.day}>
+                  <span className="font-medium text-warm-800">{slot.day}:</span>{" "}
+                  {slot.times}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-3 text-sm text-warm-500">
+              No recurring availability set yet — ask when messaging.
+            </p>
+          )}
+        </div>
+      </div>
 
       <div className="mt-8 rounded-lg border border-warm-200 bg-white p-5">
         <h2 className="text-lg font-medium text-warm-900">

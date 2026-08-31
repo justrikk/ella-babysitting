@@ -38,6 +38,7 @@ export interface SitterProfile {
   reviewCount: number;
   wwccConfirmed: boolean;
   firstAidCertified: boolean;
+  otherCertifications?: string;
   bestWithAgeMin?: number;
   bestWithAgeMax?: number;
   offersSchoolPickup: boolean;
