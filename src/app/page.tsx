@@ -84,7 +84,7 @@ export default async function Home() {
               Bundeena &amp; Maianbar
             </span>
             <h1 className="mt-4 text-3xl font-semibold tracking-tight text-warm-900 sm:text-4xl">
-              Babysitting, kept local
+              Local Babysitting you can trust
             </h1>
             <p className="mx-auto mt-4 max-w-xl text-warm-600 sm:mx-0">
               Every parent and sitter is personally approved by Ella before
@@ -156,7 +156,7 @@ export default async function Home() {
       <section className="border-t border-warm-200 bg-warm-50">
         <div className="mx-auto max-w-5xl px-4 py-14">
           <h2 className="text-center text-lg font-semibold text-warm-900">
-            Why families trust Ella&apos;s
+            Why families trust Sitter Sisters
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {trustPoints.map((point) => (

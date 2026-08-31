@@ -10,17 +10,17 @@ export function SitterCard({ sitter }: { sitter: SitterProfile }) {
       href={`/sitters/${sitter.id}`}
       className="block rounded-xl border border-warm-200 bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-primary-200 hover:shadow-lg hover:shadow-primary-900/5"
     >
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-3">
-          <Avatar name={sitter.name} />
-          <div>
-            <p className="font-medium text-warm-900">{sitter.name}</p>
-            <p className="text-sm text-warm-500">
-              {sitter.suburb ? `${sitter.suburb} · ` : ""}
-              {sitter.yearsExperience} yrs experience
-            </p>
-          </div>
+      <div className="flex min-w-0 items-center gap-3">
+        <Avatar name={sitter.name} imageUrl={sitter.avatarUrl} />
+        <div className="min-w-0">
+          <p className="truncate font-medium text-warm-900">{sitter.name}</p>
+          <p className="truncate text-sm text-warm-500">
+            {sitter.suburb ? `${sitter.suburb} · ` : ""}
+            {sitter.yearsExperience} yrs experience
+          </p>
         </div>
+      </div>
+      <div className="mt-2">
         <ApprovalBadge status={sitter.approvalStatus} />
       </div>
       <p className="mt-2 line-clamp-2 text-sm text-warm-600">{sitter.bio}</p>

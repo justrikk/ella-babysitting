@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { auth, signOut } from "@/auth";
 import { MobileMenu } from "@/components/mobile-menu";
 
@@ -24,13 +25,8 @@ export async function NavBar() {
           Admin
         </Link>
       )}
-      {!session && (
-        <Link href="/join" className={linkCls}>
-          Request access
-        </Link>
-      )}
       <Link href="/sitters/apply" className={ctaCls}>
-        Become a sitter
+        Become a Sitter Sister
       </Link>
       {session ? (
         <form
@@ -54,8 +50,15 @@ export async function NavBar() {
   return (
     <header className="sticky top-0 z-10 border-b border-warm-200 bg-white">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <Link href="/" className="text-lg font-semibold text-primary-700">
-          Ella&apos;s Babysitting
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logo.png"
+            alt="Sitter Sisters"
+            width={48}
+            height={48}
+            priority
+            className="h-12 w-12"
+          />
         </Link>
         <nav className="hidden items-center gap-4 text-sm text-warm-600 sm:flex">
           {navItems}

@@ -14,7 +14,22 @@ type QueueUser = {
   suburb: string | null;
   approvalStatus: ApprovalStatus;
   referralNote: string | null;
+  sitterProfile: {
+    dateOfBirth: Date | null;
+    wwccConfirmed: boolean;
+    wwccExpiry: Date | null;
+    firstAidCertified: boolean;
+  } | null;
 };
+
+const WWCC_REQUIRED_AGE_YEARS = 18;
+
+function ageInYears(dob: Date, now = new Date()): number {
+  let age = now.getFullYear() - dob.getFullYear();
+  const monthDay = now.getMonth() - dob.getMonth() || now.getDate() - dob.getDate();
+  if (monthDay < 0) age--;
+  return age;
+}
 
 export function ApprovalQueue({ initialUsers }: { initialUsers: QueueUser[] }) {
   const router = useRouter();
@@ -70,6 +85,32 @@ export function ApprovalQueue({ initialUsers }: { initialUsers: QueueUser[] }) {
                         <p className="mt-1 text-sm text-warm-600">
                           {u.referralNote}
                         </p>
+                      )}
+                      {u.role === "SITTER" && u.sitterProfile && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {(() => {
+                            const dob = u.sitterProfile.dateOfBirth;
+                            const age = dob ? ageInYears(new Date(dob)) : null;
+                            const wwccRequired = age !== null && age >= WWCC_REQUIRED_AGE_YEARS;
+                            if (!wwccRequired) return null;
+                            return u.sitterProfile.wwccConfirmed ? (
+                              <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800">
+                                WWCC confirmed
+                                {u.sitterProfile.wwccExpiry &&
+                                  ` (exp. ${new Date(u.sitterProfile.wwccExpiry).toLocaleDateString()})`}
+                              </span>
+                            ) : (
+                              <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs text-red-800">
+                                WWCC not confirmed — required, 18+
+                              </span>
+                            );
+                          })()}
+                          {u.sitterProfile.firstAidCertified && (
+                            <span className="rounded-full bg-warm-100 px-2 py-0.5 text-xs text-warm-700">
+                              First Aid certified
+                            </span>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>

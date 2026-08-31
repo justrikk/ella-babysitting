@@ -119,9 +119,39 @@ model SitterProfile {
   userId             String   @unique
   user               User     @relation(fields: [userId], references: [id])
 
+  // Bio/rate/experience are filled in via the self-service profile editor
+  // (src/app/dashboard/profile) after Ella approves the sitter — null until
+  // then. Signup itself only collects safety/identity info (below).
   bio                String?
-  hourlyRateCents    Int
+  hourlyRateCents    Int?
   yearsExperience    Int?
+
+  // Safety/identity info, collected at signup (src/lib/actions.ts).
+  dateOfBirth             DateTime?
+  emergencyContact1Name   String?
+  emergencyContact1Phone  String?
+  emergencyContact2Name   String?
+  emergencyContact2Phone  String?
+  // Required only when dateOfBirth implies under 16 at signup.
+  parentGuardianName      String?
+  parentGuardianPhone     String?
+  termsAcceptedAt         DateTime?
+
+  // Working with Children Check — self-declared only, no registry
+  // verification against NSW's WWCC number lookup. Mandatory for sitters
+  // 18+ (checkbox required at signup, see src/lib/actions.ts); editable
+  // later in the self-service profile editor so a renewed number/expiry
+  // can be updated. Not required under 18.
+  wwccConfirmed      Boolean   @default(false)
+  wwccNumber         String?
+  wwccExpiry         DateTime?
+
+  // Nationally Recognised First Aid (HLTAID011) — optional, self-declared.
+  firstAidCertified  Boolean   @default(false)
+
+  // Free text for any other certificates — name + expiry, sitter's own
+  // wording rather than a structured list (kept simple for this app).
+  otherCertifications String?
 
   // Optional, NOT required for this app. Kept in case a specific situation
   // (e.g. a sitter who isn't personally known to Ella) calls for one later.
@@ -130,11 +160,28 @@ model SitterProfile {
 
   stripeConnectAccountId String?        // Stripe Connect Express account for payouts
 
+  availability       SitterAvailability[]
   bookings           Booking[]          @relation("SitterBookings")
   reviews            Review[]           @relation("SitterReviews")
 
   avgRating          Float?             @default(0)
   reviewCount        Int                @default(0)
+}
+
+// A sitter's recurring weekly availability, used by the date/time search
+// (src/lib/sitters.ts). Plain integers rather than DateTime/Time — a
+// recurring weekly slot has no calendar date to anchor to, which sidesteps
+// timezone handling entirely.
+model SitterAvailability {
+  id              String        @id @default(cuid())
+  sitterProfileId String
+  sitterProfile   SitterProfile @relation(fields: [sitterProfileId], references: [id], onDelete: Cascade)
+
+  dayOfWeek       Int           // 0=Sun .. 6=Sat
+  startMinute     Int           // minutes since midnight
+  endMinute       Int           // minutes since midnight
+
+  createdAt       DateTime      @default(now())
 }
 
 model Booking {
@@ -179,7 +226,8 @@ model Payment {
   sitterPayoutCents Int
 
   status            PaymentStatus @default(PENDING)
-  stripePaymentIntentId String?
+  stripePaymentIntentId String?   // Stripe Connect payout intent (sitterPayoutCents) — not used by the flat booking fee below
+  squarePaymentId   String?       // Square Payments API id for the flat platform booking fee (src/lib/payments.ts)
   createdAt         DateTime      @default(now())
 }
 

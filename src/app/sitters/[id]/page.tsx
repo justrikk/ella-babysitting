@@ -28,10 +28,10 @@ export default async function SitterProfilePage({
         <span className="mx-1.5">/</span>
         <span className="text-warm-700">{sitter.name}</span>
       </nav>
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-4">
-          <Avatar name={sitter.name} className="h-14 w-14 text-lg" />
-          <div>
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-4">
+          <Avatar name={sitter.name} imageUrl={sitter.avatarUrl} className="h-14 w-14 text-lg" />
+          <div className="min-w-0">
             <h1 className="text-2xl font-semibold text-warm-900">
               {sitter.name}
             </h1>

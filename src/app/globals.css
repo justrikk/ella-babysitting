@@ -6,19 +6,19 @@
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas,
     monospace;
 
-  /* Brand — rich plum/indigo. Deeper and warmer than stock Tailwind
-     violet-600, meant to read as trustworthy rather than "generic SaaS
-     purple". Used for primary actions, links, and active nav state. */
-  --color-primary-50: #f6f3fb;
-  --color-primary-100: #ebe4f5;
-  --color-primary-200: #d5c5ea;
-  --color-primary-300: #b89adc;
-  --color-primary-400: #9a6fcc;
-  --color-primary-500: #7c4fb8;
-  --color-primary-600: #63389b;
-  --color-primary-700: #4f2c7c;
-  --color-primary-800: #3d2260;
-  --color-primary-900: #2c1946;
+  /* Brand — rich rose/pink. Deeper and warmer than a candy-pink, meant to
+     read as trustworthy rather than juvenile. Used for primary actions,
+     links, and active nav state. */
+  --color-primary-50: #fdf2f6;
+  --color-primary-100: #fce7ef;
+  --color-primary-200: #fbcfe0;
+  --color-primary-300: #f9a8c5;
+  --color-primary-400: #f4729f;
+  --color-primary-500: #e84d82;
+  --color-primary-600: #d22f68;
+  --color-primary-700: #ab2054;
+  --color-primary-800: #841a44;
+  --color-primary-900: #5c1531;
 
   /* Accent — warm coral, used sparingly for highlights (ratings, secondary
      emphasis) to keep the palette from reading as one flat purple wash. */

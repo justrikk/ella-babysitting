@@ -51,6 +51,22 @@ export function IconClock({ className }: IconProps) {
   );
 }
 
+export function IconChevronLeft({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M15 5l-7 7 7 7" />
+    </svg>
+  );
+}
+
+export function IconChevronRight({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M9 5l7 7-7 7" />
+    </svg>
+  );
+}
+
 export function IconWaves({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className={className}>

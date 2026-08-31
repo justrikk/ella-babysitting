@@ -51,3 +51,34 @@ export async function createSitterOnboardingLink(_opts: {
     "Stripe Connect onboarding not wired up yet. See comments in src/lib/payments.ts."
   );
 }
+
+// Flat platform booking fee (AUD $4.95) — a separate concept from the
+// Connect payout split above, charged via Square instead of Stripe. Real
+// charge, not a stub: sourceId is the card token the Web Payments SDK
+// produced client-side (src/app/bookings/[id]/page.tsx), so the app never
+// sees raw card numbers. Throws on decline/error — the caller surfaces that
+// back to the payer rather than marking the booking paid.
+export async function payBookingFee(opts: {
+  paymentId: string;
+  sourceId: string;
+  amountCents: number;
+}): Promise<{ squarePaymentId: string }> {
+  const { getSquareClient } = await import("@/lib/square");
+  const client = getSquareClient();
+
+  const result = await client.payments.create({
+    sourceId: opts.sourceId,
+    idempotencyKey: opts.paymentId,
+    amountMoney: {
+      amount: BigInt(opts.amountCents),
+      currency: "AUD",
+    },
+    locationId: process.env.SQUARE_LOCATION_ID!,
+  });
+
+  const squarePaymentId = result.payment?.id;
+  if (!squarePaymentId) {
+    throw new Error("Square did not return a payment id.");
+  }
+  return { squarePaymentId };
+}

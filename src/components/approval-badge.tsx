@@ -8,7 +8,7 @@ import type { ApprovalStatus } from "@/lib/types";
 
 const styles: Record<ApprovalStatus, { label: string; className: string }> = {
   APPROVED: {
-    label: "Approved by Ella",
+    label: "Approved Sitter Sister",
     className: "bg-green-100 text-green-800 border-green-300",
   },
   PENDING: {
@@ -25,7 +25,7 @@ export function ApprovalBadge({ status }: { status: ApprovalStatus }) {
   const s = styles[status];
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium ${s.className}`}
+      className={`inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full border px-2 py-0.5 text-xs font-medium ${s.className}`}
     >
       {status === "APPROVED" && (
         <svg viewBox="0 0 20 20" fill="currentColor" className="h-3 w-3">

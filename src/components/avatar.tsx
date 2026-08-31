@@ -1,7 +1,8 @@
-// No real sitter photos exist yet (User.image is unset for everyone), so
-// this renders initials on a deterministic warm color instead of a broken
-// <img>. Swap for a real <Image src={sitter.image}> once photo upload
-// exists — the color/initials fallback below is then just the empty state.
+// Renders a real photo (User.image, set via the self-service profile editor
+// at /dashboard/profile) when one exists; otherwise falls back to initials
+// on a deterministic warm color.
+
+import Image from "next/image";
 
 const PALETTE = [
   "bg-primary-600",
@@ -24,10 +25,28 @@ function colorFor(name: string) {
   return PALETTE[hash % PALETTE.length];
 }
 
-export function Avatar({ name, className }: { name: string; className?: string }) {
+export function Avatar({
+  name,
+  imageUrl,
+  className,
+}: {
+  name: string;
+  imageUrl?: string | null;
+  className?: string;
+}) {
+  const sizeCls = className ?? "h-10 w-10 text-sm";
+
+  if (imageUrl) {
+    return (
+      <div className={`relative overflow-hidden rounded-full ${sizeCls}`}>
+        <Image src={imageUrl} alt={name} fill className="object-cover" sizes="96px" />
+      </div>
+    );
+  }
+
   return (
     <div
-      className={`flex items-center justify-center rounded-full font-semibold text-white ${colorFor(name)} ${className ?? "h-10 w-10 text-sm"}`}
+      className={`flex items-center justify-center rounded-full font-semibold text-white ${colorFor(name)} ${sizeCls}`}
     >
       {initials(name)}
     </div>

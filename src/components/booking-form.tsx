@@ -3,36 +3,22 @@
 import { useState } from "react";
 import type { SitterProfile } from "@/lib/types";
 import { formatCurrency } from "@/lib/mock-data";
+import { requestBooking } from "@/lib/actions";
 
-// Client-side booking request form. On submit this should POST to
-// /api/bookings (create Booking with status REQUESTED), which in turn
-// triggers a push notification + message thread. Both are stubbed —
-// see src/lib/push.ts and the roadmap doc.
+// Real booking request form — posts to requestBooking (src/lib/actions.ts),
+// which creates a Booking + PENDING Payment row and redirects to
+// /bookings/[id]. Push notifications on booking creation are still stubbed
+// — see src/lib/push.ts and the roadmap doc.
 export function BookingForm({ sitter }: { sitter: SitterProfile }) {
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [hours, setHours] = useState(3);
-  const [submitted, setSubmitted] = useState(false);
 
   const estimateCents = sitter.hourlyRateCents * hours;
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    // TODO: POST to /api/bookings once a real backend exists.
-    setSubmitted(true);
-  }
-
-  if (submitted) {
-    return (
-      <div className="mt-4 rounded-md bg-green-50 border border-green-200 p-4 text-sm text-green-800">
-        Booking request sent to {sitter.name}. You&apos;ll get a notification
-        once they confirm. (Scaffold only — no backend wired up yet.)
-      </div>
-    );
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+    <form action={requestBooking} className="mt-4 space-y-4">
+      <input type="hidden" name="sitterId" value={sitter.id} />
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-warm-700">
@@ -40,6 +26,7 @@ export function BookingForm({ sitter }: { sitter: SitterProfile }) {
           </label>
           <input
             type="date"
+            name="date"
             required
             value={date}
             onChange={(e) => setDate(e.target.value)}
@@ -52,6 +39,7 @@ export function BookingForm({ sitter }: { sitter: SitterProfile }) {
           </label>
           <input
             type="time"
+            name="startTime"
             required
             value={startTime}
             onChange={(e) => setStartTime(e.target.value)}
@@ -66,6 +54,7 @@ export function BookingForm({ sitter }: { sitter: SitterProfile }) {
         </label>
         <input
           type="number"
+          name="hours"
           min={1}
           max={12}
           value={hours}

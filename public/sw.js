@@ -14,7 +14,7 @@ self.addEventListener("activate", (event) => {
 // iOS Safari only delivers these after the user adds the app to their
 // home screen (iOS 16.4+); there is no way around that from the SW.
 self.addEventListener("push", (event) => {
-  let data = { title: "Ella's Babysitting", body: "You have a new update." };
+  let data = { title: "Sitter Sisters", body: "You have a new update." };
   try {
     if (event.data) data = event.data.json();
   } catch {

@@ -15,6 +15,14 @@ export default async function AdminPage() {
       suburb: true,
       approvalStatus: true,
       referralNote: true,
+      sitterProfile: {
+        select: {
+          dateOfBirth: true,
+          wwccConfirmed: true,
+          wwccExpiry: true,
+          firstAidCertified: true,
+        },
+      },
     },
   });
 
