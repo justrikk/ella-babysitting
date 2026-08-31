@@ -15,9 +15,6 @@ export async function NavBar() {
       <Link href="/sitters" className={linkCls}>
         Find a sitter
       </Link>
-      <Link href="/contact" className={linkCls}>
-        Contact
-      </Link>
       {session && (
         <Link href="/dashboard" className={linkCls}>
           Dashboard
