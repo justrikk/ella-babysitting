@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { auth, signOut } from "@/auth";
 import { MobileMenu } from "@/components/mobile-menu";
 import { ShortlistNavLink } from "@/components/shortlist-nav-link";
@@ -53,7 +54,15 @@ export async function NavBar() {
   return (
     <header className="sticky top-0 z-10 border-b border-warm-200 bg-white">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center gap-2">
+          <Image
+            src="/icons/icon-mark.png"
+            alt=""
+            width={32}
+            height={32}
+            priority
+            className="h-8 w-8"
+          />
           <span className="text-xl font-semibold tracking-tight text-primary-700">
             The <span className="text-primary-500">Sitter List</span>
           </span>
