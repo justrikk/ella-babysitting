@@ -53,10 +53,10 @@ export default function PrivacyPage() {
 
         <section>
           <h2 className="text-base font-semibold text-warm-900">
-            Sitter Sisters Club emails
+            The Sitter List Club emails
           </h2>
           <p className="mt-2">
-            If you subscribe to the Sitter Sisters Club, we&apos;ll use your
+            If you subscribe to The Sitter List Club, we&apos;ll use your
             email to send occasional news, reviews, and content. You can
             unsubscribe at any time.
           </p>

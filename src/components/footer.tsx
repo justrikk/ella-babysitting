@@ -7,7 +7,7 @@ export function Footer() {
       <div className="mx-auto max-w-5xl px-4 py-10">
         <div className="grid gap-8 sm:grid-cols-2">
           <div>
-            <p className="text-lg font-semibold text-white">Sitter Sisters</p>
+            <p className="text-lg font-semibold text-white">The Sitter List</p>
             <p className="mt-1 text-sm">
               Local babysitting you can trust — Bundeena &amp; Maianbar.
             </p>
@@ -26,7 +26,7 @@ export function Footer() {
 
           <div>
             <p className="text-sm font-semibold text-white">
-              Join the Sitter Sisters Club
+              Join The Sitter List Club
             </p>
             <p className="mt-1 text-sm">
               Exclusive news, reviews, and content — straight to your inbox.
@@ -38,7 +38,7 @@ export function Footer() {
         </div>
 
         <p className="mt-8 border-t border-white/10 pt-6 text-xs text-primary-200">
-          © {new Date().getFullYear()} Sitter Sisters. All rights reserved.
+          © {new Date().getFullYear()} The Sitter List. All rights reserved.
         </p>
       </div>
     </footer>

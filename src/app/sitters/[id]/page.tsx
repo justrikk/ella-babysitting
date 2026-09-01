@@ -43,9 +43,15 @@ export default async function SitterProfilePage({
               {sitter.name}
             </h1>
             <p className="text-sm text-warm-500">
-              {sitter.suburb ? `${sitter.suburb} · ` : ""}
-              {sitter.yearsExperience} yrs experience ·{" "}
-              {formatCurrency(sitter.hourlyRateCents)}/hr
+              {[
+                sitter.suburb,
+                sitter.yearsExperience > 0
+                  ? `${sitter.yearsExperience} yrs experience`
+                  : null,
+                `${formatCurrency(sitter.hourlyRateCents)}/hr`,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
             </p>
           </div>
         </div>

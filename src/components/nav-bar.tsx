@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { auth, signOut } from "@/auth";
 import { MobileMenu } from "@/components/mobile-menu";
 import { ShortlistNavLink } from "@/components/shortlist-nav-link";
@@ -29,7 +28,7 @@ export async function NavBar() {
       )}
       {(!session || session.user.role === "PARENT") && (
         <Link href="/sitters/apply" className={ctaCls}>
-          Become a Sitter Sister
+          Join The Sitter List
         </Link>
       )}
       {session ? (
@@ -55,14 +54,9 @@ export async function NavBar() {
     <header className="sticky top-0 z-10 border-b border-warm-200 bg-white">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center">
-          <Image
-            src="/logo.png"
-            alt="Sitter Sisters"
-            width={48}
-            height={48}
-            priority
-            className="h-12 w-12"
-          />
+          <span className="text-xl font-semibold tracking-tight text-primary-700">
+            The <span className="text-primary-500">Sitter List</span>
+          </span>
         </Link>
         <nav className="hidden items-center gap-4 text-sm text-warm-600 sm:flex">
           {navItems}

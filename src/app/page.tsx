@@ -17,7 +17,7 @@ const steps = [
   {
     icon: IconSearch,
     title: "Search Availability",
-    body: "To get started, search availability for a Sitter Sister.",
+    body: "To get started, search sitter availability.",
   },
   {
     icon: IconCalendarHeart,
@@ -27,7 +27,7 @@ const steps = [
   {
     icon: IconShieldCheck,
     title: "Confirm",
-    body: "Check references, and hire the Sitter Sister that works for you.",
+    body: "Check references, and hire the sitter that works for you.",
   },
 ];
 
@@ -86,7 +86,7 @@ const goodToKnow = [
   {
     icon: IconLock,
     title: "A small booking fee, paid directly to your sitter",
-    body: "At the time of booking, a small non-refundable $4.95 booking fee is charged — this helps bring Sitter Sisters to the local community. Payment for your sitter's time is then made directly to them on the day.",
+    body: "At the time of booking, a small non-refundable $4.95 booking fee is charged — this helps bring The Sitter List to the local community. Payment for your sitter's time is then made directly to them on the day.",
   },
   {
     icon: IconCalendarHeart,
@@ -139,13 +139,13 @@ export default async function Home() {
                 href="/sitters"
                 className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-lg shadow-black/20 transition hover:bg-primary-50"
               >
-                Browse Sitters
+                Browse The List
               </Link>
               <Link
                 href="#how-it-works"
                 className="rounded-full border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
               >
-                How Sitter Sisters Works
+                How The Sitter List Works
               </Link>
             </div>
             <p className="mt-6 text-xs font-medium tracking-wide text-white/75 sm:text-sm">
@@ -193,7 +193,7 @@ export default async function Home() {
       <section className="border-t border-warm-200 bg-warm-50">
         <div className="mx-auto max-w-5xl px-4 py-14">
           <h2 className="text-center text-lg font-semibold text-warm-900">
-            Why families choose Sitter Sisters
+            Why families choose The Sitter List
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {trustPoints.map((point) => (
@@ -215,10 +215,10 @@ export default async function Home() {
       <section className="border-t border-warm-200 bg-white">
         <div className="mx-auto max-w-5xl px-4 py-14">
           <h2 className="text-center text-lg font-semibold text-warm-900">
-            The Sitter Sisters approval standard
+            The Sitter List Standard
           </h2>
           <p className="mx-auto mt-2 max-w-md text-center text-sm text-warm-600">
-            Sitter Sisters builds the trusted pool. You make the final choice.
+            The Sitter List builds the trusted pool. You make the final choice.
           </p>
           <div className="mt-8 grid gap-8 sm:grid-cols-3">
             {approvalStandard.map((point) => (
@@ -262,8 +262,8 @@ export default async function Home() {
             Check availability at a glance
           </h2>
           <p className="mx-auto mt-2 max-w-md text-center text-sm text-warm-600">
-            See which dates over the next two months have a Sitter Sister
-            free, and jump straight into a search.
+            See which dates over the next two months have a sitter free,
+            and jump straight into a search.
           </p>
           <div className="mt-8">
             <AvailabilityCalendar availableDaysOfWeek={availableDaysOfWeek} />
@@ -312,7 +312,7 @@ export default async function Home() {
         <div className="absolute inset-0 bg-primary-900/60" />
         <div className="relative mx-auto w-full max-w-5xl px-4 text-center">
           <h2 className="text-2xl font-semibold text-white sm:text-3xl">
-            Ready to choose your Sitter Sister?
+            Ready to find your sitter?
           </h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-white/85 sm:text-base">
             Browse approved local sitters and find the right fit for your

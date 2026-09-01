@@ -13,13 +13,13 @@ import { IosInstallBanner } from "@/components/ios-install-banner";
 // self-hosted font file if a specific brand typeface matters later.
 
 export const metadata: Metadata = {
-  title: "Sitter Sisters",
+  title: "The Sitter List",
   description: "Local babysitting you can trust.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Sitter Sisters",
+    title: "The Sitter List",
   },
 };
 

@@ -1,6 +1,6 @@
 {
-  "name": "Sitter Sisters",
-  "short_name": "Sitter Sisters",
+  "name": "The Sitter List",
+  "short_name": "Sitter List",
   "description": "Local babysitting you can trust.",
   "start_url": "/",
   "display": "standalone",

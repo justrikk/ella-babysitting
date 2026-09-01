@@ -83,12 +83,14 @@ export default function ShortlistPage() {
                     {formatCurrency(sitter.hourlyRateCents)}/hr
                   </dd>
                 </div>
-                <div className="flex items-center justify-between border-t border-warm-100 py-2">
-                  <dt className="text-warm-500">Experience</dt>
-                  <dd className="font-medium text-warm-900">
-                    {sitter.yearsExperience} yrs
-                  </dd>
-                </div>
+                {sitter.yearsExperience > 0 && (
+                  <div className="flex items-center justify-between border-t border-warm-100 py-2">
+                    <dt className="text-warm-500">Experience</dt>
+                    <dd className="font-medium text-warm-900">
+                      {sitter.yearsExperience} yrs
+                    </dd>
+                  </div>
+                )}
                 {sitter.bestWithAgeMin !== undefined &&
                   sitter.bestWithAgeMax !== undefined && (
                     <div className="flex items-center justify-between border-t border-warm-100 py-2">

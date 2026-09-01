@@ -18,7 +18,7 @@ export default function TermsPage() {
             Service description
           </h2>
           <p className="mt-2">
-            Sitter Sisters connects parents and sitters who are part
+            The Sitter List connects parents and sitters who are part
             of a small, local network — everyone who joins is known to our
             team or vouched for by someone we know. It is not an open
             marketplace, and it does not run formal background checks; trust
@@ -51,7 +51,7 @@ export default function TermsPage() {
             Liability
           </h2>
           <p className="mt-2">
-            Sitter Sisters facilitates introductions between parents
+            The Sitter List facilitates introductions between parents
             and sitters but is not itself a childcare provider or employer of
             sitters. As noted above, this is a draft disclaimer — a real
             liability policy for a service handling childcare and payments

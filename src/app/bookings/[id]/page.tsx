@@ -89,11 +89,11 @@ export default async function BookingDetailPage({
           <h2 className="text-lg font-medium text-warm-900">Booking fee</h2>
           <p className="mt-1 text-sm text-warm-600">
             A {formatCurrency(booking.payment.amountCents)} platform fee — required
-            before the booking is confirmed and the sitter is assigned. We&apos;ll
-            send you the sitter&apos;s contact details, and emergency contacts are
-            shared with you. We thank you for booking with Sitter Sisters — the
-            booking fee goes towards hosting the website and developing the local
-            business.
+            before the booking is confirmed. We&apos;ll send you the
+            sitter&apos;s contact details, and emergency contacts are
+            shared with you. We thank you for booking with The Sitter List —
+            the booking fee goes towards hosting the website and developing
+            the local business.
           </p>
 
           {error === "payment" && (

@@ -117,8 +117,8 @@ export default async function SittersPage({
           </h1>
           <p className="mt-1 text-sm text-primary-100">
             {sitters.length} sitter{sitters.length === 1 ? "" : "s"} listed.
-            Anyone can browse — sitters marked &quot;Approved Sitter
-            Sister&quot; can accept bookings.
+            Anyone can browse — sitters marked &quot;The Sitter List
+            Approved&quot; can accept bookings.
           </p>
         </div>
       </div>

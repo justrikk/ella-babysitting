@@ -8,7 +8,7 @@ import type { ApprovalStatus } from "@/lib/types";
 
 const styles: Record<ApprovalStatus, { label: string; className: string }> = {
   APPROVED: {
-    label: "Approved Sitter Sister",
+    label: "The Sitter List Approved",
     className: "bg-green-100 text-green-800 border-green-300",
   },
   PENDING: {

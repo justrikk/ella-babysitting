@@ -63,13 +63,11 @@ export function SitterCard({ sitter }: { sitter: SitterProfile }) {
         <span className="font-medium text-warm-900">
           From {formatCurrency(sitter.hourlyRateCents)}/hr
         </span>
-        {sitter.reviewCount > 0 ? (
+        {sitter.reviewCount > 0 && (
           <span className="text-warm-500">
             <span className="text-accent-500">★</span>{" "}
             {sitter.avgRating.toFixed(1)} ({sitter.reviewCount})
           </span>
-        ) : (
-          <span className="text-warm-400">No reviews yet</span>
         )}
       </div>
 

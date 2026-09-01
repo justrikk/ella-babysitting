@@ -292,7 +292,7 @@ export async function requestPasswordReset(formData: FormData) {
       await resend.emails.send({
         from: process.env.EMAIL_FROM!,
         to: user.email,
-        subject: "Reset your Sitter Sisters password",
+        subject: "Reset your password — The Sitter List",
         html: `<p>Click below to set a new password. This link expires in 1 hour.</p><p><a href="${resetUrl}">${resetUrl}</a></p><p>If you didn't request this, you can ignore this email.</p>`,
       });
     }
